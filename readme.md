@@ -60,8 +60,10 @@ El código de ubicacion se refiere a R1 (Rack 1) - fila 1 - columna 2
 | **EJEMPLO INGRESO**  |`INGRESO` |`1`|`3`|`3`|`2025-10-21`|`R1-1-1`|`(vacio)`|`(vacio)`|
 | **EJEMPLO INTERNO**  |`INTERNO` |`2`|`2`|`1`|`2025-10-22`|`(vacio)`|`R1-1-1`|`R1-1-2`|
 ```
-Las órdenes de movimiento utilizan diferentes constructores dependiendo de su tipo, que puede ser interno, de ingreso o egreso. Las órdenes de mov. interno usan dos ubicaciones, origen y destino. Las órdenes de ingreso/egreso sólo usan una ubicacion, donde se asigna el producto al ingresarlo, y de dónde se quitó para egresarlo.
+Las órdenes de movimiento utilizan diferentes constructores dependiendo de su tipo.
 ```
 ---
+#### Ordenes de movimiento:
+Una misma clase crea los 3 tipos de ordenes usando polimorfismo. Las ordenes pueden ser de movimiento interno, de ingreso o egreso. Las órdenes de movimiento interno usan en su constructor dos ubicaciones, origen y destino respectivamente. Las órdenes de ingreso/egreso sólo usan una ubicacion: donde se asigna el producto al ingresarlo (en caso de tipo ingreso), y de donde se quitó al egresarlo (en caso de tipo egreso).
 
 
