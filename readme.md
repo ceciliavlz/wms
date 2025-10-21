@@ -64,6 +64,6 @@ Las órdenes de movimiento utilizan diferentes constructores dependiendo de su t
 ```
 ---
 #### Ordenes de movimiento:
-Una misma clase crea los 3 tipos de ordenes usando polimorfismo. Las ordenes pueden ser de movimiento interno, de ingreso o egreso. Las órdenes de movimiento interno usan en su constructor dos ubicaciones, origen y destino respectivamente. Las órdenes de ingreso/egreso sólo usan una ubicacion: donde se asigna el producto al ingresarlo (en caso de tipo ingreso), y de donde se quitó al egresarlo (en caso de tipo egreso).
+Una misma clase crea los 3 tipos de ordenes usando sobrecarga de constructores. Las ordenes pueden ser de movimiento interno, de ingreso o egreso. Las órdenes de movimiento interno usan en su constructor dos ubicaciones, origen y destino respectivamente. Las órdenes de ingreso/egreso sólo usan una ubicacion: donde se asigna el producto al ingresarlo (en caso de tipo ingreso), y de donde se quitó al egresarlo (en caso de tipo egreso).
 
 
