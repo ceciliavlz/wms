@@ -1,0 +1,205 @@
+package services;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import model.Producto;
+import model.StockUbicacion;
+import model.Ubicacion;
+import repositories.StockRepository;
+
+public class ManejadorStock {
+    private Map<Integer, Producto> productosMap = new HashMap<>();
+    private Map<String, Ubicacion> ubicacionesMap = new HashMap<>();
+
+    private Map<Integer, List<StockUbicacion>> stockPorProducto = new HashMap<>();
+    private Map<String, List<StockUbicacion>> stockPorUbicacion = new HashMap<>();
+    
+    private List<StockUbicacion> stockLista = new ArrayList<>();
+
+    //registrar en map
+    public void registrarProducto(Producto p) {
+        productosMap.put(p.getIdProducto(), p);
+    }
+
+    public void registrarUbicacion(Ubicacion u) {
+        ubicacionesMap.put(u.getCodigoUbicacion(), u);
+    }
+
+    //cargar desde archivo
+    public void cargarStockDesdeArchivo(List<StockUbicacion> lista){
+        StockRepository repository = new StockRepository();
+
+        try{
+            List<StockUbicacion> cargado = repository.cargarStock();
+
+            for (StockUbicacion s : cargado){  //armar maps
+                stockLista.add(s);
+
+                stockPorProducto
+                .computeIfAbsent(s.getIdProducto(), k -> new ArrayList<>())
+                .add(s);
+
+                stockPorUbicacion
+                .computeIfAbsent(s.getCodigoUbicacion(), k -> new ArrayList<>())
+                .add(s);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void guardarEnArchivo() {
+        StockRepository repository = new StockRepository();
+        try {
+            repository.guardarStock(stockLista);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //stock
+    public boolean agregarStockAUbicacion(int idProducto, String ubicacionCodigo, int cantidad) {
+        Producto prod = productosMap.get(idProducto);
+        Ubicacion ubi = ubicacionesMap.get(ubicacionCodigo);
+
+        if (prod == null || ubi == null) {
+            System.out.println("ERROR: Producto o ubicación no encontrados.");
+            return false;
+        }
+
+        double pesoActual = pesoEnUbicacion(ubicacionCodigo);
+        double pesoNuevo = prod.getPesoUnitario() * cantidad;
+
+        if (pesoActual + pesoNuevo > Ubicacion.getPesoMaximo()) {
+            System.out.println("EEROR: No se puede agregar. Supera el peso máximo en " + ubicacionCodigo);
+            return false;
+        }
+
+        //buscar stock existente
+        StockUbicacion stockExistente = buscarStockUbicacion(idProducto, ubicacionCodigo);
+        if (stockExistente != null) {
+            stockExistente.setCantidad(stockExistente.getCantidad() + cantidad);
+        } else {
+            StockUbicacion nuevo = new StockUbicacion(idProducto, ubicacionCodigo, cantidad);
+            stockLista.add(nuevo);
+        
+            stockPorProducto
+                .computeIfAbsent(idProducto, k -> new ArrayList<>())
+                .add(nuevo);
+
+            stockPorUbicacion
+                .computeIfAbsent(ubicacionCodigo, k -> new ArrayList<>())
+                .add(nuevo);
+        }
+        return true;
+    }
+
+    public boolean retirarStockDeUbicacion(int idProducto, String codigoUbicacion, int cantidad) {
+
+        StockUbicacion stockExistente = buscarStockUbicacion(idProducto, codigoUbicacion);
+
+        if (stockExistente == null) {
+            System.out.println("ERROR: No existe stock para ese producto en esa ubicación.");
+            return false;
+        }
+
+        if (stockExistente.getCantidad() < cantidad) {
+            System.out.println("ERROR: Stock insuficiente para retirar.");
+            return false;
+        }
+        
+        //actualiza la lista y todos los maps porq es una referencia
+        stockExistente.setCantidad(stockExistente.getCantidad() - cantidad);
+
+        return true;
+}
+
+    public boolean moverStockEntreUbicaciones(int idProducto, String codigoUbiOrigen, String codigoUbiDestino, int cantidad) {
+        if (retirarStockDeUbicacion(idProducto, codigoUbiOrigen, cantidad)) {
+            if (agregarStockAUbicacion(idProducto, codigoUbiDestino, cantidad)) {
+                return true;
+            } else {
+                // Revertir retiro si no se puede agregar en destino
+                agregarStockAUbicacion(idProducto, codigoUbiOrigen, cantidad);
+                System.out.println("ERROR: No se pudo mover el stock. Operación revertida.");
+                return false;
+            }
+        } else {
+            System.out.println("ERROR: No se pudo retirar el stock de la ubicación origen.");
+            return false;
+        }
+    }
+
+    //consultas
+    public int getStockTotalPorProducto(int idProducto) {
+        List<StockUbicacion> lista = stockPorProducto.get(idProducto);
+        if (lista == null) return 0;
+
+        return lista.stream().mapToInt(StockUbicacion::getCantidad).sum();
+    }
+
+    public List<StockUbicacion> getStockPorUbicacion(String ubicacionCodigo) {
+        return stockPorUbicacion.getOrDefault(ubicacionCodigo, List.of());
+    }
+
+    public int getStockTotal() {
+        return stockLista.stream().mapToInt(StockUbicacion::getCantidad).sum();
+    }
+
+    public double getPesoTotal() {
+        double total = 0;
+        for (StockUbicacion s : stockLista) {
+            Producto p = productosMap.get(s.getIdProducto());
+            total += p.getPesoUnitario() * s.getCantidad();
+        }
+        return total;
+    }
+    
+    public Map<Integer, Integer> getStockAgrupadoPorProducto() {
+        Map<Integer, Integer> result = new HashMap<>();
+        for (StockUbicacion s : stockLista) {
+            result.merge(s.getIdProducto(), s.getCantidad(), Integer::sum);
+        }
+        return result;
+    }
+
+    public Map<String, Integer> getStockAgrupadoPorUbicacion() {
+        Map<String, Integer> result = new HashMap<>();
+        for (StockUbicacion s : stockLista) {
+            result.merge(s.getCodigoUbicacion(), s.getCantidad(), Integer::sum);
+        }
+        return result;
+    }
+
+    public List<StockUbicacion> getStockLista() {
+        return stockLista;
+    }
+
+    //consultas privadas
+    private double pesoEnUbicacion(String ubicacionCodigo) {
+        double total = 0;
+        List<StockUbicacion> lista = stockPorUbicacion.get(ubicacionCodigo);
+        if (lista != null) {
+            for (StockUbicacion s : lista) {
+                Producto p = productosMap.get(s.getIdProducto());
+                total += p.getPesoUnitario() * s.getCantidad();
+            }
+        }
+        return total;
+    }
+
+    private StockUbicacion buscarStockUbicacion(int idProducto, String ubicacionCodigo) {
+        List<StockUbicacion> lista = stockPorProducto.get(idProducto);
+        if (lista == null) return null;
+        for (StockUbicacion s : lista) {
+            if (s.getCodigoUbicacion().equals(ubicacionCodigo)) {
+                return s;
+            }
+        }
+        return null;
+    }
+}
