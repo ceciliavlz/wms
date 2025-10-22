@@ -8,12 +8,11 @@ import model.OrdenMovimiento;
 import repositories.OrdenMovRepository;
 
 public class MovimientoService {
-    private ManejadorStock manejadorStock;
-    private List<OrdenMovimiento> historialMovimientos = new ArrayList<>();
-    private OrdenMovRepository repo = new OrdenMovRepository(); 
+    private StockService StockService;
+    private List<OrdenMovimiento> historialMovimientos = new ArrayList<>();         //thinking the thinks hmhmmh
 
-    public MovimientoService(ManejadorStock manejadorStock) {
-        this.manejadorStock = manejadorStock;
+    public MovimientoService(StockService StockService) {
+        this.StockService = StockService;
         cargarHistorial();
     }
 
@@ -21,19 +20,19 @@ public class MovimientoService {
         boolean ok = false;
         switch (orden.getTipoMovimientoOrden()) {
             case INGRESO:
-                ok = manejadorStock.agregarStockAUbicacion(
+                ok = StockService.agregarStockAUbicacion(
                     orden.getIdProducto(), 
                     orden.getUbicacion(), 
                     orden.getCantidad());
                     break;
             case EGRESO:
-                ok = manejadorStock.retirarStockDeUbicacion(
+                ok = StockService.retirarStockDeUbicacion(
                     orden.getIdProducto(), 
                     orden.getUbicacion(), 
                     orden.getCantidad());
                     break;
             case INTERNO:
-                ok = manejadorStock.moverStockEntreUbicaciones(
+                ok = StockService.moverStockEntreUbicaciones(
                     orden.getIdProducto(), 
                     orden.getUbicacionOrigen(), 
                     orden.getUbicacionDestino(), 
@@ -48,17 +47,30 @@ public class MovimientoService {
 
     public void guardarHistorial() {
         try {
-            repo.guardarOrdenes(historialMovimientos);
+            OrdenMovRepository.guardarOrdenes(historialMovimientos);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void cargarHistorial() {
-        try {
-            historialMovimientos = repo.cargarOrdenes();
+        try { historialMovimientos = OrdenMovRepository.cargarOrdenes();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    public int getProximoOrdenId(){
+        return (historialMovimientos.size() + 1);        
+    }
+
+    public List<OrdenMovimiento> historialMovimientoProducto(int idProducto){
+        List<OrdenMovimiento> listaProductos = new ArrayList<>();
+        for (OrdenMovimiento o : historialMovimientos){
+            if (idProducto == o.getIdProducto()){
+                listaProductos.add(o);
+            }
+        }
+        return listaProductos;
+    }   
 }

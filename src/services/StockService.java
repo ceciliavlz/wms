@@ -11,7 +11,7 @@ import model.StockUbicacion;
 import model.Ubicacion;
 import repositories.StockRepository;
 
-public class ManejadorStock {
+public class StockService {
     private Map<Integer, Producto> productosMap = new HashMap<>();
     private Map<String, Ubicacion> ubicacionesMap = new HashMap<>();
 
@@ -19,6 +19,11 @@ public class ManejadorStock {
     private Map<String, List<StockUbicacion>> stockPorUbicacion = new HashMap<>();
     
     private List<StockUbicacion> stockLista = new ArrayList<>();
+
+
+    public StockService(){
+        cargarStockDesdeArchivo();
+    }
 
     //registrar en map
     public void registrarProducto(Producto p) {
@@ -30,21 +35,19 @@ public class ManejadorStock {
     }
 
     //cargar desde archivo
-    public void cargarStockDesdeArchivo(List<StockUbicacion> lista){
-        StockRepository repository = new StockRepository();
-
+    public void cargarStockDesdeArchivo(){
         try{
-            List<StockUbicacion> cargado = repository.cargarStock();
+            List<StockUbicacion> stockCargados = StockRepository.cargarStock();
 
-            for (StockUbicacion s : cargado){  //armar maps
+            for (StockUbicacion s : stockCargados){  //armar maps
                 stockLista.add(s);
 
                 stockPorProducto
-                .computeIfAbsent(s.getIdProducto(), k -> new ArrayList<>())
+                .computeIfAbsent(s.getIdProducto(), _ -> new ArrayList<>())
                 .add(s);
 
                 stockPorUbicacion
-                .computeIfAbsent(s.getCodigoUbicacion(), k -> new ArrayList<>())
+                .computeIfAbsent(s.getCodigoUbicacion(), _ -> new ArrayList<>())
                 .add(s);
             }
         } catch (IOException e) {
@@ -53,12 +56,15 @@ public class ManejadorStock {
     }
 
     public void guardarEnArchivo() {
-        StockRepository repository = new StockRepository();
         try {
-            repository.guardarStock(stockLista);
+            StockRepository.guardarStock(stockLista);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    //prducto nuevo
+    public Producto getProductoPorId(int id){
+        return(productosMap.get(id));
     }
 
     //stock
@@ -75,7 +81,7 @@ public class ManejadorStock {
         double pesoNuevo = prod.getPesoUnitario() * cantidad;
 
         if (pesoActual + pesoNuevo > Ubicacion.getPesoMaximo()) {
-            System.out.println("EEROR: No se puede agregar. Supera el peso máximo en " + ubicacionCodigo);
+            System.out.println("ERROR: No se puede agregar. Supera el peso máximo en " + ubicacionCodigo);
             return false;
         }
 
@@ -88,13 +94,19 @@ public class ManejadorStock {
             stockLista.add(nuevo);
         
             stockPorProducto
-                .computeIfAbsent(idProducto, k -> new ArrayList<>())
+                .computeIfAbsent(idProducto, _ -> new ArrayList<>())
                 .add(nuevo);
 
             stockPorUbicacion
-                .computeIfAbsent(ubicacionCodigo, k -> new ArrayList<>())
+                .computeIfAbsent(ubicacionCodigo, _ -> new ArrayList<>())
                 .add(nuevo);
+            }
+        if (pesoEnUbicacion(ubicacionCodigo) >= Ubicacion.getPesoMaximo()) {
+            ubicacionesMap.get(ubicacionCodigo).setUbicacionLlena(true);
+        } else {
+            ubicacionesMap.get(ubicacionCodigo).setUbicacionLlena(false);
         }
+
         return true;
     }
 
@@ -111,7 +123,12 @@ public class ManejadorStock {
             System.out.println("ERROR: Stock insuficiente para retirar.");
             return false;
         }
-        
+
+        if (pesoEnUbicacion(codigoUbicacion) >= Ubicacion.getPesoMaximo()) {
+            ubicacionesMap.get(codigoUbicacion).setUbicacionLlena(true);
+        } else {
+            ubicacionesMap.get(codigoUbicacion).setUbicacionLlena(false);
+        }
         //actualiza la lista y todos los maps porq es una referencia
         stockExistente.setCantidad(stockExistente.getCantidad() - cantidad);
 
@@ -146,6 +163,10 @@ public class ManejadorStock {
         return stockPorUbicacion.getOrDefault(ubicacionCodigo, List.of());
     }
 
+    public List<StockUbicacion> getStockPorProducto(int idProducto) {
+        return stockPorProducto.getOrDefault(idProducto, List.of());
+    }
+
     public int getStockTotal() {
         return stockLista.stream().mapToInt(StockUbicacion::getCantidad).sum();
     }
@@ -175,8 +196,20 @@ public class ManejadorStock {
         return result;
     }
 
-    public List<StockUbicacion> getStockLista() {
-        return stockLista;
+    public Map<String, Ubicacion> getUbicacionesDisponibles() {
+        Map<String, Ubicacion> ubiDisponibles = new HashMap<>();
+
+        for (String codigo : ubicacionesMap.keySet()) {
+            Ubicacion ubicacion = ubicacionesMap.get(codigo);
+            if (!ubicacion.getUbicacionLlena()){
+                ubiDisponibles.put(codigo, ubicacion);
+            }
+        }
+        return ubiDisponibles;
+    }
+
+    public int getProximoProdId(){
+        return(productosMap.size() + 1);
     }
 
     //consultas privadas
@@ -201,5 +234,18 @@ public class ManejadorStock {
             }
         }
         return null;
+    }
+
+    //getters
+    public Map<Integer, Producto> getProductosMap() {
+        return productosMap;
+    }
+
+    public Map<String, Ubicacion> getUbicacionesMap() {
+        return ubicacionesMap;
+    }
+
+    public List<StockUbicacion> getStockLista() {
+        return stockLista;
     }
 }

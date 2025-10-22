@@ -1,27 +1,33 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
 
 public class Rack {
     private int idRack;
-    private List<Ubicacion> ubicaciones;
-    static final int columnas = 3;
     static final int filas = 3;
+    static final int columnas = 3;
+    private List<Ubicacion> ubicaciones = new ArrayList<>();
 
-    public Rack(int idRack) {
-        this.idRack = idRack;
-        this.ubicaciones = generarUbicaciones();
+   public Rack(int codigoRack) {
+        this.idRack = codigoRack;
+        generarUbicaciones();
     }
 
-    List<Ubicacion> generarUbicaciones(){
-        List<Ubicacion> lista = new ArrayList<>();
-        for (int f = 0; f < filas; f++) {
-            for (int c = 0; c < columnas; c++) {
+    private void generarUbicaciones(){
+        for (int f = 1; f <= filas; f++) {
+            for (int c = 1; c <= columnas; c++) {
                 String codigo = this.idRack + "-" + f + "-" + c; //1-1-3
-                lista.add(new Ubicacion(codigo, this));
+                ubicaciones.add(new Ubicacion(codigo, this.idRack, f, c));
             }
         }
-        return lista;
-    }   
+    }
+
+    public int getIdRack() { return idRack; }
+    public List<Ubicacion> getUbicaciones() { return ubicaciones; }
+    public static int getColumnas() { return columnas; }
+    public static int getFilas() {return filas; }
 }

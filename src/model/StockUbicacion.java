@@ -15,28 +15,15 @@ public class StockUbicacion {
         return "P" + idProducto + ", Ubicación: " + codigoUbicacion + ", Cant " + cantidad;
     }
 
-    public int getIdProducto() {
-        return idProducto;
-    }
-
-    public String getCodigoUbicacion() {
-        return codigoUbicacion;
-    }
-
-    public int getCantidad() {
-        return cantidad;
-    }
-
-    public void setIdProducto(int idProducto) {
-        this.idProducto = idProducto;
-    }
+    public int getIdProducto() {return idProducto;}
+    public String getCodigoUbicacion() {return codigoUbicacion; }
+    public int getCantidad() {return cantidad; }
+    public void setIdProducto(int idProducto) {this.idProducto = idProducto; }
 
     public void setCodigoUbicacion(String codigoUbicacion) {
         this.codigoUbicacion = codigoUbicacion;
     }
-
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
-    
 }

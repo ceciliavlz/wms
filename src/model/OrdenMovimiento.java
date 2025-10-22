@@ -41,62 +41,47 @@ public class OrdenMovimiento {
         this.ubicacionDestino = ubiDestino; 
     }
     
-    public TipoMovimiento getTipoMovimientoOrden() {
-        return tipoMovimientoOrden;
+    public String toStringIngEgr(){
+        return("FECHA " + this.fecha +" | ID "+ this.idOrdenMov +" | CANT "+ this.cantidad + " | PROD " +
+        this.idProducto + " | UBICACION " + this.ubicacion + " | " + this.tipoMovimientoOrden.name());
     }
-    public int getIdOrdenMov() {
-        return idOrdenMov;
+    public String toStringInterno(){
+        return("FECHA " + this.fecha +" | ID "+ this.idOrdenMov +" | CANT "+ this.cantidad + " | PROD " +
+        this.idProducto + " | UB ORIGEN " + this.ubicacionOrigen + " | UB DESTINO " + this.ubicacionDestino 
+        +" | "+ this.tipoMovimientoOrden.name());
     }
-    public int getCantidad() {
-        return cantidad;
-    }
-    public int getIdProducto() {
-        return idProducto;
-    }
-    public LocalDate getFecha() {
-        return fecha;
-    }
-    public String getUbicacion() {
-        return ubicacion;
-    }
-    public String getUbicacionOrigen() {
-        return ubicacionOrigen;
-    }
-    public String getUbicacionDestino() {
-        return ubicacionDestino;
-    }
+
+    public TipoMovimiento getTipoMovimientoOrden() { return tipoMovimientoOrden; }
+    public int getIdOrdenMov() { return idOrdenMov; }
+    public int getCantidad() { return cantidad; }
+    public int getIdProducto() { return idProducto; }
+    public LocalDate getFecha() { return fecha; }
+    public String getUbicacion() { return ubicacion; }
+    public String getUbicacionOrigen() { return ubicacionOrigen; }
+    public String getUbicacionDestino() { return ubicacionDestino; }
 
     public void setTipoMovimientoOrden(TipoMovimiento tipoMovimientoOrden) {
         this.tipoMovimientoOrden = tipoMovimientoOrden;
     }
-
     public void setIdOrdenMov(int idOrdenMov) {
         this.idOrdenMov = idOrdenMov;
     }
-
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
-
     public void setIdProducto(int idProducto) {
         this.idProducto = idProducto;
     }
-
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
-
     public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
     }
-
     public void setUbicacionOrigen(String ubicacionOrigen) {
         this.ubicacionOrigen = ubicacionOrigen;
     }
-
     public void setUbicacionDestino(String ubicacionDestino) {
         this.ubicacionDestino = ubicacionDestino;
-    }
-    
-    
+    }   
 }

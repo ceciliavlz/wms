@@ -1,85 +1,233 @@
+import java.time.LocalDate;
+
 import model.OrdenMovimiento;
 import model.Producto;
-import model.Rack;
+import model.StockUbicacion;
+import model.TipoMovimiento;
 import model.Ubicacion;
 import model.UnidadMedida;
-import services.ManejadorStock;
+import services.StockService;
 import services.MovimientoService;
+import services.RackService;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        ManejadorStock service = new ManejadorStock();
-        MovimientoService movimientoService = new MovimientoService(service);
+        Scanner sc = new Scanner(System.in);
+        StockService stockService = new StockService();
+        RackService rackService = new RackService(stockService);
+        MovimientoService movService = new MovimientoService(stockService);
+        //SOLO SE INSTANCIAN UNA VEZ
 
-        // Registro de productos
-        service.registrarProducto(new Producto(1, "Caja", UnidadMedida.KILOS,10,2));
-        service.registrarProducto(new Producto(2, "Yerba", UnidadMedida.KILOS,5,5));
+        boolean salir = false;
 
-        // Registro de ubicaciones
-        Rack rack = new Rack(1);
-        service.registrarUbicacion(new Ubicacion("R1-1-1",rack ));
-        service.registrarUbicacion(new Ubicacion("R1-1-2", rack));
+        while (!salir) {
+            System.out.println("\n=== MENÚ PRINCIPAL ===");
+            System.out.println("1. Registrar nuevo producto");
+            System.out.println("2. Crear nuevo rack");
+            System.out.println("3. Ver ubicaciones disponibles");
+            System.out.println("4. Ingreso de stock de un producto");
+            System.out.println("5. Egreso de stock");
+            System.out.println("6. Mover stock entre ubicaciones");
+            System.out.println("7. Ver stock total por producto");
+            System.out.println("8. Ver movimientos de un producto");
+            System.out.println("9. Salir");
+            System.out.print("Seleccione una opción: ");
 
-        // Agregar stock
-        service.agregarStockAUbicacion(1, "R1-1-1", 5);  // 5 x 10 = 50 kg
-        service.agregarStockAUbicacion(2, "R1-1-1", 6);  // 6 x 5 = 30 kg
-        service.agregarStockAUbicacion(1, "R1-1-2", 3);  // 3 x 10 = 30 kg
+            int opcion = leerEntero(sc);
 
-        System.out.println("Stock total de P1: " + service.getStockTotalPorProducto(1));
-        System.out.println("Stock total de P2(6): " + service.getStockTotalPorProducto(2));
-        System.out.println("Stock en R1-1-1: " + service.getStockPorUbicacion("R1-1-1").toString());
-        System.out.println("Stock en R1-1-2: " + service.getStockPorUbicacion("R1-1-2").toString());
-        System.out.println("Stock total: " + service.getStockTotal());
-        System.out.println("Peso total: " + service.getPesoTotal());
-        System.out.println("Agrupado por producto: " + service.getStockAgrupadoPorProducto());
-        System.out.println("Agrupado por ubicación: " + service.getStockAgrupadoPorUbicacion());
+            switch (opcion) {
+                case 1 -> registrarProducto(sc, stockService,movService);
+                case 2 -> crearRack(rackService);
+                case 3 -> mostrarUbicaciones(stockService);
+                case 4 -> ingresoStock(sc, stockService, movService);
+                case 5 -> egresoStock(sc, stockService, movService);
+                case 6 -> moverStock(sc, stockService, movService);
+                case 7 -> verStockPorProducto(sc, stockService);
+                case 8 -> verHistorial(sc, movService);
+                case 9 -> {
+                    salir = true;
+                    movService.guardarHistorial();
+                    stockService.guardarEnArchivo();
+                    System.out.println("Datos guardados. ¡Hasta luego!");
+                }
+                default -> System.out.println("Opción inválida.");
+            }
+        }
+        sc.close();
+    }
 
-        //ordenes movimiento
-        System.out.println(" ORDEN INGRESO 3 P3 a R1-1-1");
-        service.registrarProducto(new Producto(3, "Perfume", UnidadMedida.LITROS,0.10,0.10));
-        OrdenMovimiento ordenIngreso = new OrdenMovimiento(
-            model.TipoMovimiento.INGRESO, 1,3,3, java.time.LocalDate.now(), "R1-1-1");
-        if (movimientoService.procesarOrdenMovimiento(ordenIngreso)) {
-            System.out.println("Ingreso procesado.");
-        } else {
-            System.out.println("Error en ingreso.");
+    private static int leerEntero(Scanner sc) {
+        while (!sc.hasNextInt()) {
+            System.out.print("Ingrese un número válido: ");
+            sc.next();
+        }
+        int val = sc.nextInt();
+        sc.nextLine(); // limpiar buffer
+        return val;
+    }
+
+    private static void registrarProducto(Scanner sc, StockService stockService, MovimientoService movService) {
+
+        int id = stockService.getProximoProdId();
+        System.out.print("PRODUCTO NUEVO (ID " + id + ")");
+        System.out.print("Descripción: ");
+        String desc = sc.nextLine();
+        System.out.print("Peso unitario: ");
+        double peso = sc.nextDouble();
+        System.out.print("Capacidad del contenedor: ");
+        double capacidad = sc.nextDouble();
+        sc.nextLine();
+        //unidad medida
+        System.out.print("Unidad de medida. Elija la opción: ");
+        System.out.println("1. kg | 2. lt | 3. unidad | 4. gr ");
+        int medida = leerEntero(sc); sc.nextLine();
+        UnidadMedida uMed = UnidadMedida.UNIDAD;
+        switch (medida) {
+            case 1 ->  uMed = UnidadMedida.KILOS;       
+            case 2 ->  uMed = UnidadMedida.LITROS;       
+            case 3 ->  uMed = UnidadMedida.UNIDAD;       
+            case 4 ->  uMed = UnidadMedida.GRAMOS;       
+            default -> System.out.println("Opción inválida.");
+            }
+
+        Producto p = new Producto(id, desc, uMed, peso, capacidad);
+        stockService.registrarProducto(p);
+        System.out.println("Producto registrado correctamente. Asígnelo a una ubicacion");
+
+        mostrarUbicaciones(stockService);
+        System.out.print("Ubicación destino: ");
+        String ubi = sc.nextLine();
+        System.out.print("Cantidad a ingresar: ");
+        int cantidad = leerEntero(sc);
+
+        OrdenMovimiento ingreso = new OrdenMovimiento(
+            TipoMovimiento.INGRESO,
+            movService.getProximoOrdenId(),
+            cantidad,
+            p.getIdProducto(),
+            LocalDate.now(),
+            ubi
+        );
+
+        boolean procesada = movService.procesarOrdenMovimiento(ingreso);
+        if (procesada) { System.out.println("Ingreso realizado correctamente.");}
+    }
+
+    private static void crearRack(RackService rackService) {
+        int id = rackService.getProximoRackId();
+        rackService.crearRack(id);
+
+        System.out.print("Se creó un nuevo Rack con éxito (CODIGO " + id + ")");
+    }
+
+    private static void mostrarUbicaciones(StockService stockService) {
+        System.out.println("\n=== UBICACIONES DISPONIBLES ===");
+        stockService.getUbicacionesDisponibles().values().stream()  //este berenjenal lista en orden ascendente
+            .sorted(Comparator.comparingInt((Ubicacion u) -> u.getIdRack())
+                      .thenComparingInt(Ubicacion::getFila)
+                      .thenComparingInt(Ubicacion::getColumna))
+            .forEach(u -> System.out.println(" - " + u.getCodigoUbicacion()));
+    }
+
+    private static void ingresoStock(Scanner sc, StockService stockService, MovimientoService movService) {
+        System.out.print("ID de producto: ");
+        int idProd = leerEntero(sc);
+        if (!stockService.getProductosMap().containsKey(idProd)) {
+            System.out.println("ERROR: Producto no registrado.");
+            return;
         }
 
-        System.out.println(" ORDEN MOV INTERNO 2 P1 de R1-1-1 a R1-1-2 -> R1-1-1 tiene 3 P1");
-        OrdenMovimiento ordenInterno = new OrdenMovimiento(
-            model.TipoMovimiento.INTERNO, 2,2,1, java.time.LocalDate.now(), "R1-1-1", "R1-1-2");
-        if (movimientoService.procesarOrdenMovimiento(ordenInterno)) {
-            System.out.println("movimiento interno procesado.");
-        } else {
-            System.out.println("Error en ingreso.");
+        mostrarUbicaciones(stockService);
+        System.out.print("Ubicación destino: ");
+        String ubi = sc.nextLine();
+        System.out.print("Cantidad a ingresar: ");
+        int cantidad = leerEntero(sc);
+
+        OrdenMovimiento ingreso = new OrdenMovimiento(
+            TipoMovimiento.INGRESO,
+            movService.getProximoOrdenId(),
+            cantidad,
+            idProd,
+            LocalDate.now(),
+            ubi
+        );
+
+        boolean procesada = movService.procesarOrdenMovimiento(ingreso);
+        if (procesada) { System.out.println("Ingreso realizado correctamente.");}
+    }
+
+    private static void egresoStock(Scanner sc, StockService stockService, MovimientoService movService) {
+        System.out.print("ID de producto: ");
+        int idProd = leerEntero(sc);
+        mostrarUbicaciones(stockService);
+        System.out.print("Ubicación origen: ");
+        String ubi = sc.nextLine();
+        System.out.print("Cantidad a retirar: ");
+        int cantidad = leerEntero(sc);
+
+        OrdenMovimiento egreso = new OrdenMovimiento(
+            TipoMovimiento.EGRESO,
+            movService.getProximoOrdenId(),
+            cantidad,
+            idProd,
+            LocalDate.now(),
+            ubi
+        );
+        if (movService.procesarOrdenMovimiento(egreso)) {
+            System.out.println("Egreso realizado correctamente.");
         }
+    }
 
-        System.out.println(" ORDEN EGRESO 2 P2 fuera de R1-1-1 ->  R1-1-1 tiene 4 P2");
-        OrdenMovimiento ordenEgreso = new OrdenMovimiento(
-            model.TipoMovimiento.EGRESO, 3,2,2, java.time.LocalDate.now(), "R1-1-1");
-        if (movimientoService.procesarOrdenMovimiento(ordenEgreso)) {
-            System.out.println("egreso procesado.");
-        } else {
-            System.out.println("Error en egreso.");
+    private static void moverStock(Scanner sc, StockService stockService, MovimientoService movService) {
+        System.out.print("ID de producto: ");
+        int idProd = leerEntero(sc);
+        mostrarUbicaciones(stockService);
+        System.out.print("Ubicación origen: ");
+        String ubiOrigen = sc.nextLine();
+        System.out.print("Ubicación destino: ");
+        String ubiDestino = sc.nextLine();
+        System.out.print("Cantidad a mover: ");
+        int cantidad = leerEntero(sc);
+
+        OrdenMovimiento interno = new OrdenMovimiento(
+            TipoMovimiento.INTERNO,
+            movService.getProximoOrdenId(),
+            cantidad,
+            idProd,
+            LocalDate.now(),
+            ubiOrigen,
+            ubiDestino
+        );
+        if (movService.procesarOrdenMovimiento(interno)) {
+            System.out.println("Movimiento interno realizado correctamente.");
         }
-        
-        // Consultas
-        System.out.println("Stock total de P1: " + service.getStockTotalPorProducto(1));
-        System.out.println("Stock total de P2(4): " + service.getStockTotalPorProducto(2));
-        System.out.println("Stock total de P3: " + service.getStockTotalPorProducto(3));
-        System.out.println("Stock en R1-1-1: " + service.getStockPorUbicacion("R1-1-1").toString());
-        System.out.println("Stock en R1-1-2: " + service.getStockPorUbicacion("R1-1-2").toString());
-        System.out.println("Stock total: " + service.getStockTotal());
-        System.out.println("Peso total (100): " + service.getPesoTotal());
-        System.out.println("Agrupado por producto: " + service.getStockAgrupadoPorProducto());
-        System.out.println("Agrupado por ubicación: " + service.getStockAgrupadoPorUbicacion());
+    }
 
+    private static void verStockPorProducto(Scanner sc, StockService stockService) {
+        System.out.print("ID de producto: ");
+        int idProd = leerEntero(sc);
 
-        // hook de apagado que dice la ia sirve para no olvidarse de guardar los datos
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            service.guardarEnArchivo();
-            movimientoService.guardarHistorial();
-            System.out.println("Datos guardados correctamente al salir.");
-        }));
+        int total = stockService.getStockTotalPorProducto(idProd);
+        System.out.println("Stock total del producto " + idProd + ": " + total);
+        List<StockUbicacion> lista = stockService.getStockPorProducto(idProd);
+        if (lista != null) {
+            for (StockUbicacion s : lista) {
+                System.out.println(" - " + s.getCodigoUbicacion() + ": " + s.getCantidad());
+            }
+        }
+    }
+
+    private static void verHistorial(Scanner sc, MovimientoService movService) {
+        System.out.print("ID de producto: ");
+        int idProd = leerEntero(sc);
+        List<OrdenMovimiento> historial = movService.historialMovimientoProducto(idProd);
+        if (historial.isEmpty()) {
+            System.out.println("No hay movimientos registrados para ese producto.");
+        } else {
+            for (OrdenMovimiento o : historial) {
+                System.out.println(o.getTipoMovimientoOrden() + " - " + o.getFecha() + " - Cantidad: " + o.getCantidad());
+            }
+        }
     }
 }

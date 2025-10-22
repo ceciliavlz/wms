@@ -9,7 +9,7 @@ import model.TipoMovimiento;
 public class OrdenMovRepository {
     private static final String FILE_PATH = "data/movimientos.csv";
 
-    public void guardarOrdenes(List<OrdenMovimiento> ordenes) throws IOException {
+    public static void guardarOrdenes(List<OrdenMovimiento> ordenes) throws IOException {
     File dir = new File("data");
     if (!dir.exists()) dir.mkdirs();
     
@@ -29,7 +29,7 @@ public class OrdenMovRepository {
         }
     }
 
-    public List<OrdenMovimiento> cargarOrdenes() throws IOException {
+    public static List<OrdenMovimiento> cargarOrdenes() throws IOException {
         List<OrdenMovimiento> lista = new ArrayList<>();
         File file = new File(FILE_PATH);
         if (!file.exists()) return lista;

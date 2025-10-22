@@ -28,4 +28,8 @@ public class Producto {
         return pesoUnitario;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
 }

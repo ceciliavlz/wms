@@ -9,7 +9,7 @@ public class StockRepository {
 
     private static final String FILE_PATH = "data/stock.csv";
     
-    public void guardarStock(List<StockUbicacion> stockLista) throws IOException {
+    public static void guardarStock(List<StockUbicacion> stockLista) throws IOException {
         // Lógica para guardar el stock en el archivo CSV
     File dir = new File("data");
     if (!dir.exists()) dir.mkdirs();
@@ -21,7 +21,7 @@ public class StockRepository {
         }
     }
 
-    public List<StockUbicacion> cargarStock() throws IOException {
+    public static List<StockUbicacion> cargarStock() throws IOException {
         // Lógica para cargar el stock desde el archivo CSV
         List<StockUbicacion> lista = new ArrayList<>();
         File file = new File(FILE_PATH);

@@ -2,31 +2,32 @@ package model;
 
 public class Ubicacion {
     private String codigoUbicacion;
-    private Rack rack;
-    static final float pesoMaximo = 1250;
+    private int idRack;
+    private int fila;
+    private int columna;
+    private boolean ubicacionLlena;
+    static final float PESO_MAXIMO = 1250;  
 
-    public Ubicacion(String codigoUbicacion, Rack rack) {
+    public Ubicacion(String codigoUbicacion, int idRack, int fila, int columna) {
         this.codigoUbicacion = codigoUbicacion;
-        this.rack = rack;
+        this.idRack = idRack;
+        this.fila = fila;
+        this.columna = columna;
+        this.ubicacionLlena = false;
     }
 
-    public String getCodigo() {
+    public String getCodigoUbicacion() { return codigoUbicacion; }
+    public int getIdRack() { return idRack; }
+    public int getFila() { return fila; }
+    public int getColumna() { return columna; }
+    public static float getPesoMaximo() { return PESO_MAXIMO; }
+    public boolean getUbicacionLlena() {return ubicacionLlena; }
+
+    public String toString() {
         return codigoUbicacion;
     }
-
-    public Rack getRack() {
-        return rack;
-    }
-
-    public String getCodigoUbicacion() {
-        return codigoUbicacion;
-    }
-
-    public void setCodigoUbicacion(String codigoUbicacion) {
-        this.codigoUbicacion = codigoUbicacion;
-    }
-
-    public static float getPesoMaximo() {
-        return pesoMaximo;
+    
+    public void setUbicacionLlena(boolean ubicacionLlena){
+        this.ubicacionLlena = ubicacionLlena;
     }
 }
