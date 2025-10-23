@@ -27,6 +27,7 @@ public class StockService {
 
     //registrar en map
     public void registrarProducto(Producto p) {
+        p.setIdProducto(getProximoProdId());    //setea id automatico
         productosMap.put(p.getIdProducto(), p);
     }
 

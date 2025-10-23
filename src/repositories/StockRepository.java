@@ -10,7 +10,6 @@ public class StockRepository {
     private static final String FILE_PATH = "data/stock.csv";
     
     public static void guardarStock(List<StockUbicacion> stockLista) throws IOException {
-        // Lógica para guardar el stock en el archivo CSV
     File dir = new File("data");
     if (!dir.exists()) dir.mkdirs();
     

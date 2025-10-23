@@ -31,7 +31,6 @@ public class OrdenMovimiento {
         if (tipo != TipoMovimiento.INTERNO) {
             throw new IllegalArgumentException("Este constructor solo se usa para movimientos INTERNOS.");
         }
-
         this.idOrdenMov = id;
         this.tipoMovimientoOrden = tipo;
         this.idProducto = idProducto;

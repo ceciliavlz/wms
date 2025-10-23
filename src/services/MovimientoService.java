@@ -18,6 +18,7 @@ public class MovimientoService {
 
     public boolean procesarOrdenMovimiento(OrdenMovimiento orden) {
         boolean ok = false;
+        orden.setIdOrdenMov(getProximoOrdenId());   //asigna id automatico
         switch (orden.getTipoMovimientoOrden()) {
             case INGRESO:
                 ok = StockService.agregarStockAUbicacion(
@@ -60,7 +61,7 @@ public class MovimientoService {
         }
     }
 
-    public int getProximoOrdenId(){
+    private int getProximoOrdenId(){
         return (historialMovimientos.size() + 1);        
     }
 

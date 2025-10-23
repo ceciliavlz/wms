@@ -7,9 +7,8 @@ public class Producto {
     private double pesoUnitario;
     private double capacidad;
 
-    public Producto(int idProducto, String descripcion, UnidadMedida unidadMedida, double pesoUnitario,
+    public Producto(String descripcion, UnidadMedida unidadMedida, double pesoUnitario,
             double capacidad) {
-        this.idProducto = idProducto;
         this.descripcion = descripcion;
         this.unidadMedida = unidadMedida;
         this.pesoUnitario = pesoUnitario;

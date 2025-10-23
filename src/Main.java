@@ -69,8 +69,6 @@ public class Main {
 
     private static void registrarProducto(Scanner sc, StockService stockService, MovimientoService movService) {
 
-        int id = stockService.getProximoProdId();
-        System.out.print("PRODUCTO NUEVO (ID " + id + ")");
         System.out.print("Descripción: ");
         String desc = sc.nextLine();
         System.out.print("Peso unitario: ");
@@ -91,9 +89,9 @@ public class Main {
             default -> System.out.println("Opción inválida.");
             }
 
-        Producto p = new Producto(id, desc, uMed, peso, capacidad);
+        Producto p = new Producto(desc, uMed, peso, capacidad); //id asignado en registrarProducto
         stockService.registrarProducto(p);
-        System.out.println("Producto registrado correctamente. Asígnelo a una ubicacion");
+        System.out.println("Producto registrado correctamente (ID " + p.getIdProducto() + "). Asígnelo a una ubicacion");
 
         mostrarUbicaciones(stockService);
         System.out.print("Ubicación destino: ");
@@ -103,7 +101,7 @@ public class Main {
 
         OrdenMovimiento ingreso = new OrdenMovimiento(
             TipoMovimiento.INGRESO,
-            movService.getProximoOrdenId(),
+            0, //temporario, se asigna en procesarOrdenMovimiento
             cantidad,
             p.getIdProducto(),
             LocalDate.now(),
@@ -115,10 +113,7 @@ public class Main {
     }
 
     private static void crearRack(RackService rackService) {
-        int id = rackService.getProximoRackId();
-        rackService.crearRack(id);
-
-        System.out.print("Se creó un nuevo Rack con éxito (CODIGO " + id + ")");
+        rackService.crearRack(); //id asignado automaticamente
     }
 
     private static void mostrarUbicaciones(StockService stockService) {
@@ -146,7 +141,7 @@ public class Main {
 
         OrdenMovimiento ingreso = new OrdenMovimiento(
             TipoMovimiento.INGRESO,
-            movService.getProximoOrdenId(),
+            0, //temporario, se asigna en procesarOrdenMovimiento
             cantidad,
             idProd,
             LocalDate.now(),
@@ -168,7 +163,7 @@ public class Main {
 
         OrdenMovimiento egreso = new OrdenMovimiento(
             TipoMovimiento.EGRESO,
-            movService.getProximoOrdenId(),
+            0, //temporario, se asigna en procesarOrdenMovimiento
             cantidad,
             idProd,
             LocalDate.now(),
@@ -192,7 +187,7 @@ public class Main {
 
         OrdenMovimiento interno = new OrdenMovimiento(
             TipoMovimiento.INTERNO,
-            movService.getProximoOrdenId(),
+            0,  //temporario, se asigna en procesarOrdenMovimiento
             cantidad,
             idProd,
             LocalDate.now(),
