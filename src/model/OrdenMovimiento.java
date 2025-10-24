@@ -3,6 +3,7 @@ package model;
 import java.time.LocalDate;
 
 public class OrdenMovimiento {
+
     private TipoMovimiento tipoMovimientoOrden;
     private int idOrdenMov;
     private int cantidad;

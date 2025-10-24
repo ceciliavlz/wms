@@ -12,13 +12,8 @@ public class Nave {
         this.racks = racks;
     }
 
-    public int getIdNave() {
-        return idNave;
-    }
-
-    public ArrayList<Rack> getRacks() {
-        return racks;
-    }
+    public int getIdNave() {return idNave; }
+    public ArrayList<Rack> getRacks() {return racks; }
 
     public void setIdNave(int idNave) {
         this.idNave = idNave;
@@ -28,6 +23,9 @@ public class Nave {
         this.racks = racks;
     }
 
+    public String toString() {
+        return "Nave ID: " + idNave + ", " + racks.size() + " racks.";
+    }
 }
 
 

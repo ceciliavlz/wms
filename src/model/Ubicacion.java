@@ -2,14 +2,16 @@ package model;
 
 public class Ubicacion {
     private String codigoUbicacion;
+    private int idNave;
     private int idRack;
     private int fila;
     private int columna;
     private boolean ubicacionLlena;
     static final float PESO_MAXIMO = 1250;  
 
-    public Ubicacion(String codigoUbicacion, int idRack, int fila, int columna) {
+    public Ubicacion(String codigoUbicacion, int idNave, int idRack, int fila, int columna) {
         this.codigoUbicacion = codigoUbicacion;
+        this.idNave = idNave;
         this.idRack = idRack;
         this.fila = fila;
         this.columna = columna;

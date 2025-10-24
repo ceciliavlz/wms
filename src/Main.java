@@ -1,51 +1,112 @@
-import java.time.LocalDate;
 
-import model.OrdenMovimiento;
-import model.Producto;
-import model.StockUbicacion;
-import model.TipoMovimiento;
-import model.Ubicacion;
-import model.UnidadMedida;
+import java.util.Scanner;
+
 import services.StockService;
+import view.ConsultasView;
+import view.HistorialView;
+import view.NaveView;
+import view.OrdenesMovView;
+import view.ProductoView;
+import view.View;
 import services.MovimientoService;
+import services.NaveService;
 import services.RackService;
-import java.util.*;
+import controller.ConsultasController;
+import controller.HistorialController;
+import controller.MovimientoController;
+import controller.NaveController;
+import controller.ProductoController;
+
 
 public class Main {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+
+        Scanner scanner = new Scanner(System.in);
+
+        //SOLO SE INSTANCIAN UNA VEZ
         StockService stockService = new StockService();
         RackService rackService = new RackService(stockService);
+        NaveService naveService = new NaveService(rackService);
         MovimientoService movService = new MovimientoService(stockService);
-        //SOLO SE INSTANCIAN UNA VEZ
-
+        //views
+        ConsultasView consultasView = new ConsultasView();
+        HistorialView historialView = new HistorialView();
+        NaveView naveView = new NaveView();
+        OrdenesMovView ordenesMovView = new OrdenesMovView();
+        ProductoView productoView = new ProductoView();
+        //controllers
+        HistorialController historialCtrl = new HistorialController(movService, historialView, scanner);
+        MovimientoController movimientoCtrl = new MovimientoController(stockService, movService, ordenesMovView, scanner);
+        NaveController naveCtrl = new NaveController(naveService, naveView, scanner);
+        ProductoController productoCtrl = new ProductoController(stockService, productoView, scanner);
+        ConsultasController consultasCtrl = new ConsultasController(stockService, consultasView, scanner);
+        
         boolean salir = false;
+
+        while (!salir) {
+            System.out.println("\n==== Menú Principal =======================");
+            System.out.println("1. NAVES");
+            System.out.println("2. PRODUCTOS");
+            System.out.println("3. ORDENES DE MOVIMIENTO");
+            System.out.println("4. ORDENES DE TRANSFORMACION"); //TODO
+            System.out.println("5. HISTORIAL DE MOVIMIENTOS");
+            System.out.println("6. CONSULTAS");
+            System.out.println("0. Salir");
+            System.out.println("==============================================");
+
+            int opcion = View.leerEntero(scanner);
+
+            switch (opcion) {
+                case 1 -> naveCtrl.mostrarMenuNaves();
+                case 2 -> productoCtrl.mostrarMenuProductos();
+                case 3 -> movimientoCtrl.mostrarMenuMovimiento();
+                case 4 -> System.out.println(" -- Pendiente --");
+                case 5 -> historialCtrl.mostrarMenuHistorial();
+                case 6 -> consultasCtrl.mostrarMenuConsultas();
+                case 0 -> { 
+                    salir = true;
+                    return;
+                 }
+                default -> System.out.println("\nOpción inválida");
+            }
+        }
+        scanner.close();
+    
+        movService.guardarHistorial();
+        stockService.guardarEnArchivo();
+        System.out.println("Datos guardados. ¡Hasta luego!");
+    }
+}
+
+   /*    boolean salir = false;
 
         while (!salir) {
             System.out.println("\n=== MENÚ PRINCIPAL ===");
             System.out.println("1. Registrar nuevo producto");
-            System.out.println("2. Crear nuevo rack");
-            System.out.println("3. Ver ubicaciones disponibles");
-            System.out.println("4. Ingreso de stock de un producto");
-            System.out.println("5. Egreso de stock");
-            System.out.println("6. Mover stock entre ubicaciones");
-            System.out.println("7. Ver stock total por producto");
-            System.out.println("8. Ver movimientos de un producto");
-            System.out.println("9. Salir");
+            System.out.println("2. Crear nueva nave");
+            System.out.println("3. Crear nuevo rack");
+            System.out.println("4. Ver ubicaciones disponibles");
+            System.out.println("5. Ingreso de stock de un producto");
+            System.out.println("6. Egreso de stock");
+            System.out.println("7. Mover stock entre ubicaciones");
+            System.out.println("8. Ver stock total por producto");
+            System.out.println("9. Ver movimientos de un producto");
+            System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
 
             int opcion = leerEntero(sc);
 
             switch (opcion) {
                 case 1 -> registrarProducto(sc, stockService,movService);
-                case 2 -> crearRack(rackService);
-                case 3 -> mostrarUbicaciones(stockService);
-                case 4 -> ingresoStock(sc, stockService, movService);
-                case 5 -> egresoStock(sc, stockService, movService);
-                case 6 -> moverStock(sc, stockService, movService);
-                case 7 -> verStockPorProducto(sc, stockService);
-                case 8 -> verHistorial(sc, movService);
-                case 9 -> {
+                case 2 -> crearNave(naveService);
+                case 3 -> crearRackEnNave(sc, naveService);
+                case 4 -> mostrarUbicaciones(stockService);
+                case 5 -> ingresoStock(sc, stockService, movService);
+                case 6 -> egresoStock(sc, stockService, movService);
+                case 7 -> moverStock(sc, stockService, movService);
+                case 8 -> verStockPorProducto(sc, stockService);
+                case 9 -> verHistorial(sc, movService);
+                case 0 -> {
                     salir = true;
                     movService.guardarHistorial();
                     stockService.guardarEnArchivo();
@@ -68,7 +129,6 @@ public class Main {
     }
 
     private static void registrarProducto(Scanner sc, StockService stockService, MovimientoService movService) {
-
         System.out.print("Descripción: ");
         String desc = sc.nextLine();
         System.out.print("Peso unitario: ");
@@ -78,17 +138,9 @@ public class Main {
         sc.nextLine();
         //unidad medida
         System.out.print("Unidad de medida. Elija la opción: ");
-        System.out.println("1. kg | 2. lt | 3. unidad | 4. gr ");
-        int medida = leerEntero(sc); sc.nextLine();
-        UnidadMedida uMed = UnidadMedida.UNIDAD;
-        switch (medida) {
-            case 1 ->  uMed = UnidadMedida.KILOS;       
-            case 2 ->  uMed = UnidadMedida.LITROS;       
-            case 3 ->  uMed = UnidadMedida.UNIDAD;       
-            case 4 ->  uMed = UnidadMedida.GRAMOS;       
-            default -> System.out.println("Opción inválida.");
-            }
-
+        System.out.println("LITRO | KILO | UNIDAD");
+        UnidadMedida uMed;
+        try { uMed = UnidadMedida.valueOf(sc.nextLine().trim().toUpperCase());  } catch (Exception e) { System.out.println("Unidad inválida."); return; }
         Producto p = new Producto(desc, uMed, peso, capacidad); //id asignado en registrarProducto
         stockService.registrarProducto(p);
         System.out.println("Producto registrado correctamente (ID " + p.getIdProducto() + "). Asígnelo a una ubicacion");
@@ -112,8 +164,20 @@ public class Main {
         if (procesada) { System.out.println("Ingreso realizado correctamente.");}
     }
 
-    private static void crearRack(RackService rackService) {
-        rackService.crearRack(); //id asignado automaticamente
+    private static void crearNave(NaveService naveService) {
+        Nave nave = naveService.crearNave();
+        System.out.println("Nave creada con ID: " + nave.getIdNave());
+    }
+
+    private static void crearRackEnNave(Scanner sc, NaveService naveService) {
+        System.out.print("Ingrese el ID de la nave donde quiere crear el rack: ");
+        int idNave = leerEntero(sc);
+        Rack nuevo = naveService.crearRackEnNave(idNave);
+        if (nuevo != null) {
+            System.out.println("Rack creado con ID " + nuevo.getIdRack() + " en la nave " + idNave);
+        } else {
+            System.out.println("No se encontró la nave con ID " + idNave);
+        }
     }
 
     private static void mostrarUbicaciones(StockService stockService) {
@@ -226,3 +290,4 @@ public class Main {
         }
     }
 }
+*/ 

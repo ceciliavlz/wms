@@ -9,7 +9,7 @@ import repositories.OrdenMovRepository;
 
 public class MovimientoService {
     private StockService StockService;
-    private List<OrdenMovimiento> historialMovimientos = new ArrayList<>();         //thinking the thinks hmhmmh
+    private List<OrdenMovimiento> historialMovimientos = new ArrayList<>();
 
     public MovimientoService(StockService StockService) {
         this.StockService = StockService;
