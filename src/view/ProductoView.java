@@ -1,22 +1,116 @@
 package view;
 
-
-import java.util.Map;
+import java.util.List;
 import java.util.Scanner;
+import controller.ProductoController;
 import model.Producto;
-import model.UnidadMedida;
-
 
 public class ProductoView extends View{
+    private final ProductoController productoCtrl;
+    Scanner sc;
 
-    public void opcionesMenuProductos(){
-        System.out.println("\n==== Menú Productos ================");
-        System.out.println("1. Agregar productos");
-        System.out.println("2. Listar productos");
-        System.out.println("3. Buscar producto por descripcion");
-        System.out.println("4. Eliminar producto");
-        System.out.println("0. Volver");
-        System.out.println("=======================================");
+    public ProductoView(ProductoController productoCtrl, Scanner sc){
+        this.productoCtrl = productoCtrl;
+        this.sc = sc;
+    }
+
+    public void mostrarMenuProductos() {
+        boolean salir = false;
+
+        while (!salir) {
+            System.out.println("\n==== Menú Productos ================");
+            System.out.println("1. Agregar producto");
+            System.out.println("2. Agregar varios productos");
+            System.out.println("3. Listar productos");
+            System.out.println("4. Buscar producto por ID");
+            System.out.println("5. Eliminar producto");
+            System.out.println("0. Volver");
+            System.out.println("=======================================");
+
+            int opcion = super.leerEntero(sc);
+
+            switch (opcion) {
+                case 1 -> agregarProductoMenu();
+                case 2 -> agregarMuchosProductos();
+                case 3 -> mostrarProductos();
+                case 4 -> mostrarProductoID();
+                case 5 -> eliminarProducto();
+                case 0 -> { 
+                    salir = true;
+                    return;
+                 }
+                default -> super.mostrarMensaje("\nOpción inválida");
+            }
+        }
+    }
+
+    public void agregarProductoMenu(){
+        String respuesta;
+
+        String descripcion = pedirDescripcion(sc);
+        double peso = pedirPeso(sc);
+        double capacidad = pedirCapacidad(sc);
+        String unidadMedida = pedirUnidadMedida(sc);
+
+        respuesta = productoCtrl.agregarProducto(descripcion, unidadMedida, peso, capacidad);
+
+        if(respuesta.equals("")){
+            super.mostrarMensaje("Error al crear producto.");
+        } else {
+            super.mostrarMensaje(respuesta);
+            super.mostrarMensaje("Producto registrado correctamente.");
+        }
+    }
+
+    public void agregarMuchosProductos(){
+        String tecla;
+        do {
+            agregarProductoMenu();
+            super.mostrarMensaje("¿Ingresar otro producto? (x para salir)");
+            tecla = sc.nextLine().trim().toLowerCase();
+        } while (!tecla.equals("x"));
+    }
+
+    public void mostrarProductos() {
+        List<String> respuesta = productoCtrl.listarProductos();
+
+        if(respuesta.isEmpty()){
+            super.mostrarMensaje("No se encontraron productos.");
+        } else {
+            for (String producto : respuesta) {
+                super.mostrarMensaje(producto);
+            }
+        }
+    }
+
+    public void mostrarProductoID(){
+        int id = pedirId(sc);
+        String respuesta = productoCtrl.buscarProductoPorId(id);
+
+        if(respuesta.equals("")){
+            super.mostrarMensaje("No se encontró ningún producto con esa ID.");
+        } else {
+            super.mostrarMensaje(respuesta);
+        }
+    }
+
+     public void eliminarProducto() {
+        int id = pedirId(sc);
+        String producto = productoCtrl.buscarProductoPorId(id);
+
+        if(producto.equals("")){
+            super.mostrarMensaje("No se encontró ningún producto con esa ID.");
+        } else {
+            super.mostrarMensaje(producto);
+        }
+
+        String confirm = leerAprobacion(sc);
+
+        if (confirm.equals("s")) {
+            productoCtrl.eliminarProducto(id);
+        } else {
+            super.mostrarMensaje("Operación cancelada.");
+        }
     }
 
     public String pedirDescripcion(Scanner sc){
@@ -38,7 +132,8 @@ public class ProductoView extends View{
     }
 
     public String pedirUnidadMedida(Scanner sc){
-        System.out.print("Unidad de medida (LITROS | KILO | UNIDAD | GRAMOS | MILILITROS): ");
+        System.out.println("Unidad de medida (LITROS | KILOS | UNIDAD | GRAMOS | MILILITROS): ");
+        sc.nextLine();
         String uMed = sc.nextLine();
         return uMed;
     }
@@ -47,12 +142,6 @@ public class ProductoView extends View{
         System.out.println("ID del producto: ");
         int id = super.leerEntero(sc);
         return id;
-    }
-
-    public void mostrarProductos(Map<Integer, Producto> productos) {
-        for (Producto p : productos.values()) {
-            System.out.println(p.toString());
-        }
     }
 
     public String leerAprobacion(Scanner sc){

@@ -1,33 +1,106 @@
 package view;
 
+import java.util.List;
 import java.util.Scanner;
 
-public class ConsultasView extends View{
+import controller.ConsultasController;
+import controller.ProductoController;
 
-    public void opcionesMenuConsultas(){
-        System.out.println("\n==== Menú consultas ================");
-        System.out.println("1. Stock de un producto");
-        System.out.println("2. Stock en una ubicacion");
-        System.out.println("3. Stock agrupado por producto");
-        System.out.println("4. Stock agrupado por ubicacion");   
-        System.out.println("0. Volver");
-        System.out.println("=======================================");
+public class ConsultasView extends View{
+    private final ConsultasController consultasCtrl;
+    private final ProductoController productoCtrl;
+    Scanner sc;
+
+    public ConsultasView(ConsultasController consultasCtrl, ProductoController productoCtrl, Scanner sc){
+        this.consultasCtrl = consultasCtrl;
+        this.productoCtrl = productoCtrl;
+        this.sc = sc;
     }
 
-    public int pedirIdProducto(Scanner sc) {
+    public void mostrarMenuConsultas() {
+        boolean salir = false;
+        while (!salir) {   
+            System.out.println("\n==== Menú consultas ================");
+            System.out.println("1. Stock de un producto");
+            System.out.println("2. Stock en una ubicacion");
+            System.out.println("3. Stock agrupado por producto");
+            System.out.println("4. Stock agrupado por ubicacion");   
+            System.out.println("0. Volver");
+            System.out.println("=======================================");
+
+            int opcion = super.leerEntero(sc);
+
+            switch (opcion) {
+                case 1 -> stockDeProducto();
+                case 2 -> stockDeUbicacion();
+                case 3 -> stockAgrupadoPorProducto();
+                case 4 -> stockAgrupadoPorUbicacion();
+                case 0 -> { salir = true; }
+                default -> super.mostrarMensaje("\nOpción inválida");
+            }
+        }
+    }
+
+    public void stockDeProducto(){
+        int idProd = pedirIdProducto();
+        if (productoCtrl.existeProducto(idProd)){
+            int stock = consultasCtrl.stockDeUnProducto(idProd);
+            mostrarStockDeProducto(idProd, stock);
+        }
+    }
+
+    public void stockDeUbicacion(){
+        String ubicacion = pedirCodigoUbicacion(); //CHECKAR UBICACION EXISTE
+        List<String> respuesta = consultasCtrl.stockDeUnaUbicacion(ubicacion);
+
+        if (respuesta.isEmpty()){
+            super.mostrarMensaje("No hay stock en esa ubicación.");
+        } else {
+            super.mostrarMensaje("Stock en la ubicación " + ubicacion + ":");
+            for (String stock : respuesta) {
+                super.mostrarMensaje(stock);
+            }           
+        }
+    }
+
+    public void stockAgrupadoPorProducto(){
+        List<String> respuesta = consultasCtrl.agrupadoPorProducto();
+        if (respuesta.isEmpty()){
+            super.mostrarMensaje("No hay stock de ningun producto");
+        } else {
+            super.mostrarMensaje("\n=== Stock agrupado por producto ===");
+            for (String stockProducto : respuesta) {
+                super.mostrarMensaje(stockProducto);
+            }
+        }
+    }
+
+    public void stockAgrupadoPorUbicacion(){
+        List<String> respuesta = consultasCtrl.agrupadoPorUbicacion();
+        if (respuesta.isEmpty()){
+            super.mostrarMensaje("No hay stock de ningun producto");
+        } else {
+            super.mostrarMensaje("\n=== Stock agrupado por ubicación ===");
+            for (String stockProducto : respuesta) {
+                super.mostrarMensaje(stockProducto);
+            }
+        }
+    }
+
+    public int pedirIdProducto() {
         System.out.print("Ingrese el ID del producto: ");
         return super.leerEntero(sc);
     }
 
-    public String pedirCodigoUbicacion(Scanner sc) {
+    public String pedirCodigoUbicacion() {
         System.out.print("Código de ubicación (NAVE-RACK-FILA-COLUMNA): ");
         return sc.nextLine().trim();
     }
 
     public void mostrarStockDeProducto(int idProd, int stock) {
         if (stock > 0)
-            System.out.println("Stock total de P" + idProd + ": " + stock);
+            super.mostrarMensaje("Stock total de P" + idProd + ": " + stock);
         else
-            System.out.println("No hay stock de P" + idProd);
+            super.mostrarMensaje("No hay stock de P" + idProd);
     }
 }

@@ -49,11 +49,11 @@ public class StockService {
                 stockLista.add(s);
 
                 stockPorProducto
-                .computeIfAbsent(s.getIdProducto(), _ -> new ArrayList<>())
+                .computeIfAbsent(s.getIdProducto(), k -> new ArrayList<>())
                 .add(s);
 
                 stockPorUbicacion
-                .computeIfAbsent(s.getCodigoUbicacion(), _ -> new ArrayList<>())
+                .computeIfAbsent(s.getCodigoUbicacion(), k -> new ArrayList<>())
                 .add(s);
             }
         } catch (IOException e) {
@@ -108,11 +108,11 @@ public class StockService {
             stockLista.add(nuevo);
         
             stockPorProducto
-                .computeIfAbsent(idProducto, _ -> new ArrayList<>())
+                .computeIfAbsent(idProducto, k -> new ArrayList<>())
                 .add(nuevo);
 
             stockPorUbicacion
-                .computeIfAbsent(ubicacionCodigo, _ -> new ArrayList<>())
+                .computeIfAbsent(ubicacionCodigo, k -> new ArrayList<>())
                 .add(nuevo);
             }
         if (pesoEnUbicacion(ubicacionCodigo) >= Ubicacion.getPesoMaximo()) {
@@ -231,15 +231,6 @@ public class StockService {
 
     private int getProximoProdId(){
         return(productosMap.size() + 1);
-    }
-
-    public Producto buscarProductoPorDescripcion(String descripcion) {
-    for (Producto p : productosMap.values()) {
-        if (p.getDescripcion().equalsIgnoreCase(descripcion)) {
-            return p;
-        }
-    }
-    return null; // no encontrado
     }
 
     public boolean eliminarProductoPorId(int idProducto) {

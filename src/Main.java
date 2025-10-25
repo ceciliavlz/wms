@@ -1,4 +1,3 @@
-
 import java.util.Scanner;
 
 import services.StockService;
@@ -28,18 +27,21 @@ public class Main {
         RackService rackService = new RackService(stockService);
         NaveService naveService = new NaveService(rackService);
         MovimientoService movService = new MovimientoService(stockService);
-        //views
-        ConsultasView consultasView = new ConsultasView();
-        HistorialView historialView = new HistorialView();
-        NaveView naveView = new NaveView();
-        OrdenesMovView ordenesMovView = new OrdenesMovView();
-        ProductoView productoView = new ProductoView();
+
         //controllers
-        HistorialController historialCtrl = new HistorialController(movService, historialView, scanner);
-        MovimientoController movimientoCtrl = new MovimientoController(stockService, movService, ordenesMovView, scanner);
-        NaveController naveCtrl = new NaveController(naveService, naveView, scanner);
-        ProductoController productoCtrl = new ProductoController(stockService, productoView, scanner);
-        ConsultasController consultasCtrl = new ConsultasController(stockService, consultasView, scanner);
+        HistorialController historialCtrl = new HistorialController(movService);
+        ProductoController productoCtrl = new ProductoController(stockService);
+        MovimientoController movimientoCtrl = new MovimientoController(movService);
+        NaveController naveCtrl = new NaveController(naveService);
+        ConsultasController consultasCtrl = new ConsultasController(stockService);
+
+        //views
+        HistorialView historialView = new HistorialView(historialCtrl, scanner);
+        ProductoView productoView = new ProductoView(productoCtrl, scanner);
+        OrdenesMovView ordenesMovView = new OrdenesMovView(movimientoCtrl, productoCtrl, scanner);
+        NaveView naveView = new NaveView(naveCtrl, scanner);
+        ConsultasView consultasView = new ConsultasView(consultasCtrl, productoCtrl, scanner);
+
         
         boolean salir = false;
 
@@ -57,12 +59,12 @@ public class Main {
             int opcion = View.leerEntero(scanner);
 
             switch (opcion) {
-                case 1 -> naveCtrl.mostrarMenuNaves();
-                case 2 -> productoCtrl.mostrarMenuProductos();
-                case 3 -> movimientoCtrl.mostrarMenuMovimiento();
+                case 1 -> naveView.mostrarMenuNaves();
+                case 2 -> productoView.mostrarMenuProductos();
+                case 3 -> ordenesMovView.mostrarMenuMovimiento();
                 case 4 -> System.out.println(" -- Pendiente --");
-                case 5 -> historialCtrl.mostrarMenuHistorial();
-                case 6 -> consultasCtrl.mostrarMenuConsultas();
+                case 5 -> historialView.mostrarMenuHistorial();
+                case 6 -> consultasView.mostrarMenuConsultas();
                 case 0 -> { 
                     salir = true;
                     return;

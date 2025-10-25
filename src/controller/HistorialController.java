@@ -1,55 +1,26 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-
 import model.OrdenMovimiento;
 import services.MovimientoService;
-import view.HistorialView;
 
 public class HistorialController {
-    HistorialView historialView;
     MovimientoService movService;
-    Scanner sc;
 
-    public HistorialController (MovimientoService movService, HistorialView historialView, Scanner sc){
-        this.historialView = historialView;
+    public HistorialController (MovimientoService movService){
         this.movService = movService;
-        this.sc = sc;
     }
 
-    public void mostrarMenuHistorial() {
+    public List<String> verHistorialMov(int id) {
+        List<String> response = new ArrayList<String>();
 
-    boolean volver = false;
-
-        while (!volver) {
-
-            historialView.opcionesMenuHistorial();
-
-            int opcion = HistorialView.leerEntero(sc);
-
-            switch (opcion) {
-                case 1 -> verHistorialMov(sc);
-                case 2 -> System.out.println("TO DO");
-                case 0 -> { 
-                    volver = true;
-                    return;
-                 }
-                default -> historialView.mostrarMensaje("\nOpción inválida");
-            }
-        }
-    }
-
-    private void verHistorialMov(Scanner sc) {
-        int id = historialView.pedirIdProducto(sc);
         List<OrdenMovimiento> historial = movService.historialMovimientoProducto(id);
-        if (historial.isEmpty()) {
-            historialView.mostrarMensaje("No hay movimientos registrados para ese producto.");
-        } else {
-            for (OrdenMovimiento o : historial) {
-                historialView.mostrarMensaje(" TIPO --- | FECHA --- | CANTIDAD ---");
-                historialView.mostrarMensaje(o.getTipoMovimientoOrden() + " | " + o.getFecha() + " | " + o.getCantidad());
-            }
+
+        for (OrdenMovimiento o : historial) {
+            response.add(o.getTipoMovimientoOrden() + " | " + o.getFecha() + " | " + o.getCantidad());
         }
+        
+        return response;
     }
 }
