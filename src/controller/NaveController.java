@@ -9,7 +9,7 @@ import services.StockService;
 
 
 public class NaveController {
-    NaveService naveService;
+    private final NaveService naveService;
     private StockService stockService;
 
     public NaveController(NaveService naveService, StockService stockService){

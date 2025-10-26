@@ -44,13 +44,13 @@ public class ProductoView extends View{
         }
     }
 
-    public void agregarProductoMenu(){
+    private void agregarProductoMenu(){
         String respuesta;
 
-        String descripcion = pedirDescripcion(sc);
-        double peso = pedirPeso(sc);
-        double capacidad = pedirCapacidad(sc);
-        String unidadMedida = pedirUnidadMedida(sc);
+        String descripcion = pedirDescripcion();
+        double peso = pedirPeso();
+        double capacidad = pedirCapacidad();
+        String unidadMedida = pedirUnidadMedida();
 
         respuesta = productoCtrl.agregarProducto(descripcion, unidadMedida, peso, capacidad);
 
@@ -62,7 +62,7 @@ public class ProductoView extends View{
         }
     }
 
-    public void agregarMuchosProductos(){
+    private void agregarMuchosProductos(){
         String tecla;
         do {
             agregarProductoMenu();
@@ -71,7 +71,7 @@ public class ProductoView extends View{
         } while (!tecla.equals("x"));
     }
 
-    public void mostrarProductos() {
+    private void mostrarProductos() {
         List<String> respuesta = productoCtrl.listarProductos();
 
         if(respuesta.isEmpty()){
@@ -83,8 +83,8 @@ public class ProductoView extends View{
         }
     }
 
-    public void mostrarProductoID(){
-        int id = pedirId(sc);
+    private void mostrarProductoID(){
+        int id = pedirId();
         String respuesta = productoCtrl.buscarProductoPorId(id);
 
         if(respuesta.equals("")){
@@ -94,15 +94,15 @@ public class ProductoView extends View{
         }
     }
 
-     public void eliminarProducto() {
-        int id = pedirId(sc);
+     private void eliminarProducto() {
+        int id = pedirId();
         String producto = productoCtrl.buscarProductoPorId(id);
 
         if(producto.equals("")){
             super.mostrarMensaje("No se encontró ningún producto con esa ID.");
         } else {
             super.mostrarMensaje(producto);
-            String confirm = leerAprobacion(sc);
+            String confirm = leerAprobacion();
 
             if (confirm.equals("s")) {
                 productoCtrl.eliminarProducto(id);
@@ -112,43 +112,39 @@ public class ProductoView extends View{
         }
     }
 
-    public String pedirDescripcion(Scanner sc){
-        System.out.print("Descripción: ");
+    private String pedirDescripcion(){
+        super.mostrarMensaje("Descripción: ");
         String desc = sc.nextLine();
         return desc;
     }
 
-    public double pedirPeso(Scanner sc){
-        System.out.print("Peso unitario: ");
+    private double pedirPeso(){
+        super.mostrarMensaje("Peso unitario (en Kg): ");
         double peso = sc.nextDouble();
         return peso;
     }
 
-    public double pedirCapacidad(Scanner sc){
-       System.out.print("Capacidad del contenedor: ");
+    private double pedirCapacidad(){
+       super.mostrarMensaje("Capacidad del contenedor: ");
         double capacidad = sc.nextDouble();
         return capacidad;
     }
 
-    public String pedirUnidadMedida(Scanner sc){
-        System.out.println("Unidad de medida (LITROS | KILOS | UNIDAD | GRAMOS | MILILITROS): ");
+    private String pedirUnidadMedida(){
+        super.mostrarMensaje("Unidad de medida (LITROS | KILOS | UNIDAD | GRAMOS | MILILITROS): ");
         sc.nextLine();
         String uMed = sc.nextLine();
         return uMed;
     }
 
-    public int pedirId(Scanner sc){
+    private int pedirId(){
         System.out.println("ID del producto: ");
         int id = super.leerEntero(sc);
         return id;
     }
 
-    public String leerAprobacion(Scanner sc){
+    private String leerAprobacion(){
         System.out.println("¿Está seguro que desea eliminarlo? (s/n): ");
         return sc.nextLine().trim().toLowerCase();
-    }
-
-    public void mostrarProducto (Producto p){
-        System.out.println(p.toString());
     }
 }

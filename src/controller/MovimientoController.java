@@ -12,7 +12,7 @@ import services.StockService;
 
 public class MovimientoController {
     private final MovimientoService movService;
-    StockService stockService;
+    private final StockService stockService;
 
     public MovimientoController(MovimientoService movService,StockService stockService) {
         this.movService = movService;

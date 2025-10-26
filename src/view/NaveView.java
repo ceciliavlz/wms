@@ -2,7 +2,6 @@ package view;
 
 import java.util.List;
 import java.util.Scanner;
-
 import controller.NaveController;
 
 public class NaveView extends View{
@@ -43,12 +42,12 @@ public class NaveView extends View{
             }
         }
     }
-    public void crearNuevaNave(){
+    private void crearNuevaNave(){
         int id = naveCtrl.crearNave();
         super.mostrarMensaje("Nave creada con ID "+ id);
         }
 
-    public boolean listarNavesMenu() {
+    private boolean listarNavesMenu() {
         List<String> respuesta = naveCtrl.listarNaves();
         if (respuesta.isEmpty()) {
             super.mostrarMensaje("No hay naves registradas.");
@@ -95,7 +94,7 @@ public class NaveView extends View{
             super.mostrarMensaje("No hay naves registradas."); }
     }
 
-    public void listarUbicacionesDisponiblesRack(){
+    private void listarUbicacionesDisponiblesRack(){
         int idRack = pedirIdRack();
         List<String> ubicaciones = naveCtrl.listarUbicacionesRack(idRack);
 
@@ -109,13 +108,13 @@ public class NaveView extends View{
         }
     }
 
-    public int pedirIdNave(){
+    private int pedirIdNave(){
         super.mostrarMensaje("Ingrese ID nave: ");
         int idNave = super.leerEntero(sc);
         return idNave;
     }
 
-    public int pedirIdRack(){
+    private int pedirIdRack(){
         super.mostrarMensaje("Ingrese ID rack: ");
         int idNave = super.leerEntero(sc);
         return idNave;

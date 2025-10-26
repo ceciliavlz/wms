@@ -5,8 +5,6 @@ import java.util.List;
 import model.StockUbicacion;
 import services.StockService;
 
-
-
 public class ConsultasController {
     private final StockService stockService;
 
@@ -48,5 +46,4 @@ public class ConsultasController {
         
         return stockProducto;
     }
-
 }

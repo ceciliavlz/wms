@@ -43,7 +43,7 @@ public class OrdenesMovView extends View{
         }
     }
 
-    public void generarOrdenIngreso() {
+    private void generarOrdenIngreso() {
         int id = leerIdProducto();
         String producto = productoCtrl.buscarProductoPorId(id);
 
@@ -61,7 +61,7 @@ public class OrdenesMovView extends View{
         }
     }
 
-    public void generarOrdenEgreso() {
+    private void generarOrdenEgreso() {
         int id = leerIdProducto();
         String producto = productoCtrl.buscarProductoPorId(id);
 
@@ -80,7 +80,7 @@ public class OrdenesMovView extends View{
         }
     }
 
-    public void generarOrdenMovInterno() {
+    private void generarOrdenMovInterno() {
         int id = leerIdProducto();
         String producto = productoCtrl.buscarProductoPorId(id);
 
@@ -110,17 +110,18 @@ public class OrdenesMovView extends View{
         }
         super.mostrarMensaje("\n");
     }
-    public int leerIdProducto (){
+    
+    private int leerIdProducto (){
         System.out.print("ID de producto: ");
         return super.leerEntero(sc);
     }
 
-    public String leerUbicacion(){
+    private String leerUbicacion(){
         String ubi = sc.nextLine();
         return ubi;
     }
 
-    public int leerCantidad (){
+    private int leerCantidad (){
         int cantidad = super.leerEntero(sc);
         return cantidad;
     }

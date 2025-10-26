@@ -54,7 +54,7 @@ public class HistorialView extends View {
         }
     }
 
-    public int pedirIdProducto(Scanner sc) {
+    private int pedirIdProducto(Scanner sc) {
         System.out.print("Ingrese el ID del producto: ");
         return super.leerEntero(sc);
     }

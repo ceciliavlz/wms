@@ -6,7 +6,7 @@ import model.OrdenMovimiento;
 import services.MovimientoService;
 
 public class HistorialController {
-    MovimientoService movService;
+    private final MovimientoService movService;
 
     public HistorialController (MovimientoService movService){
         this.movService = movService;

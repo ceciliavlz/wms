@@ -2,7 +2,6 @@ package view;
 
 import java.util.List;
 import java.util.Scanner;
-
 import controller.ConsultasController;
 import controller.ProductoController;
 
@@ -41,7 +40,7 @@ public class ConsultasView extends View{
         }
     }
 
-    public void stockDeProducto(){
+    private void stockDeProducto(){
         int idProd = pedirIdProducto();
         if (productoCtrl.existeProducto(idProd)){
             int stock = consultasCtrl.stockDeUnProducto(idProd);
@@ -49,7 +48,7 @@ public class ConsultasView extends View{
         }
     }
 
-    public void stockDeUbicacion(){
+    private void stockDeUbicacion(){
         String ubicacion = pedirCodigoUbicacion(); //CHECKAR UBICACION EXISTE
         List<String> respuesta = consultasCtrl.stockDeUnaUbicacion(ubicacion);
 
@@ -63,7 +62,7 @@ public class ConsultasView extends View{
         }
     }
 
-    public void stockAgrupadoPorProducto(){
+    private void stockAgrupadoPorProducto(){
         List<String> respuesta = consultasCtrl.agrupadoPorProducto();
         if (respuesta.isEmpty()){
             super.mostrarMensaje("No hay stock de ningun producto");
@@ -75,7 +74,7 @@ public class ConsultasView extends View{
         }
     }
 
-    public void stockAgrupadoPorUbicacion(){
+    private void stockAgrupadoPorUbicacion(){
         List<String> respuesta = consultasCtrl.agrupadoPorUbicacion();
         if (respuesta.isEmpty()){
             super.mostrarMensaje("No hay stock de ningun producto");
@@ -87,17 +86,17 @@ public class ConsultasView extends View{
         }
     }
 
-    public int pedirIdProducto() {
+    private int pedirIdProducto() {
         System.out.print("Ingrese el ID del producto: ");
         return super.leerEntero(sc);
     }
 
-    public String pedirCodigoUbicacion() {
+    private String pedirCodigoUbicacion() {
         System.out.print("Código de ubicación (NAVE-RACK-FILA-COLUMNA): ");
         return sc.nextLine().trim();
     }
 
-    public void mostrarStockDeProducto(int idProd, int stock) {
+    private void mostrarStockDeProducto(int idProd, int stock) {
         if (stock > 0)
             super.mostrarMensaje("Stock total de P" + idProd + ": " + stock);
         else
