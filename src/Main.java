@@ -32,7 +32,7 @@ public class Main {
         HistorialController historialCtrl = new HistorialController(movService);
         ProductoController productoCtrl = new ProductoController(stockService);
         MovimientoController movimientoCtrl = new MovimientoController(movService);
-        NaveController naveCtrl = new NaveController(naveService);
+        NaveController naveCtrl = new NaveController(naveService, stockService);
         ConsultasController consultasCtrl = new ConsultasController(stockService);
 
         //views
@@ -41,9 +41,9 @@ public class Main {
         OrdenesMovView ordenesMovView = new OrdenesMovView(movimientoCtrl, productoCtrl, scanner);
         NaveView naveView = new NaveView(naveCtrl, scanner);
         ConsultasView consultasView = new ConsultasView(consultasCtrl, productoCtrl, scanner);
-
         
         boolean salir = false;
+        System.out.println(stockService.getUbicacionesMap().isEmpty());
 
         while (!salir) {
             System.out.println("\n==== Menú Principal =======================");

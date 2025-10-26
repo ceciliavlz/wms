@@ -62,7 +62,11 @@ public class MovimientoService {
     }
 
     private int getProximoOrdenId(){
-        return (historialMovimientos.size() + 1);        
+        if (historialMovimientos.isEmpty()){
+            return 1;
+        } else {
+            return historialMovimientos.getLast().getIdOrdenMov() + 1;
+        }     
     }
 
     public List<OrdenMovimiento> historialMovimientoProducto(int idProducto){

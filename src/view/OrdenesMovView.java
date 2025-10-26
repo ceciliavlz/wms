@@ -3,6 +3,7 @@ package view;
 import java.util.Scanner;
 
 import controller.MovimientoController;
+import controller.NaveController;
 import controller.ProductoController;
 
 public class OrdenesMovView extends View{
@@ -44,77 +45,75 @@ public class OrdenesMovView extends View{
     }
 
     public void generarOrdenIngreso() {
-        int id = leerIdProducto(sc);
+        int id = leerIdProducto();
         String producto = productoCtrl.buscarProductoPorId(id);
 
         if(producto.equals("")){
             super.mostrarMensaje("No se encontró ningún producto con esa ID.");
         } else {
             super.mostrarMensaje(producto);
+            super.mostrarMensaje("Ingrese codigo ubicacion destino:     (NAVE-RACK-FILA-COLUMNA Ej 1-1-2-3)");
+            String ubicacion = leerUbicacion();   //VALIDAR UBICACION
+            super.mostrarMensaje("Cantidad a ingresar: ");
+            int cantidad = leerCantidad();    
+
+            String respuesta = movimientoCtrl.generarOrdenIngreso(id, ubicacion, cantidad);
+            super.mostrarMensaje(respuesta);
         }
-
-        super.mostrarMensaje("Ingrese codigo ubicacion destino:     (NAVE-RACK-FILA-COLUMNA Ej 1-1-2-3)");
-        String ubicacion = leerUbicacion(sc);
-        super.mostrarMensaje("Cantidad a ingresar: ");
-        int cantidad = leerCantidad(sc);
-
-        String respuesta = movimientoCtrl.generarOrdenIngreso(id, ubicacion, cantidad);
-        super.mostrarMensaje(respuesta);
     }
 
     public void generarOrdenEgreso() {
-        int id = leerIdProducto(sc);
+        int id = leerIdProducto();
         String producto = productoCtrl.buscarProductoPorId(id);
 
         if(producto.equals("")){
             super.mostrarMensaje("No se encontró ningún producto con esa ID.");
         } else {
             super.mostrarMensaje(producto);
+            super.mostrarMensaje("Ingrese codigo ubicación:     (NAVE-RACK-FILA-COLUMNA Ej 1-1-2-3)");
+            String ubicacion = leerUbicacion();
+            super.mostrarMensaje("Cantidad a quitar: ");
+            int cantidad = leerCantidad();
+
+            String respuesta = movimientoCtrl.generarOrdenEgreso(id, ubicacion, cantidad);
+            super.mostrarMensaje(respuesta);
         }
-
-        super.mostrarMensaje("Ingrese codigo ubicación:     (NAVE-RACK-FILA-COLUMNA Ej 1-1-2-3)");
-        String ubicacion = leerUbicacion(sc);
-        super.mostrarMensaje("Cantidad a quitar: ");
-        int cantidad = leerCantidad(sc);
-
-        String respuesta = movimientoCtrl.generarOrdenEgreso(id, ubicacion, cantidad);
-        super.mostrarMensaje(respuesta);
     }
 
     public void generarOrdenMovInterno() {
-        int id = leerIdProducto(sc);
+        int id = leerIdProducto();
         String producto = productoCtrl.buscarProductoPorId(id);
 
         if(producto.equals("")){
             super.mostrarMensaje("No se encontró ningún producto con esa ID.");
         } else {
             super.mostrarMensaje(producto);
+            super.mostrarMensaje("Ubicación origen: ");
+            String ubicacionOrigen = leerUbicacion();
+
+            super.mostrarMensaje("Ubicación destino: ");
+            String ubicacionDestino = leerUbicacion();
+
+            super.mostrarMensaje("Cantidad a mover: ");
+            int cantidad = leerCantidad();
+
+            String respuesta = movimientoCtrl.generarOrdenMovInterno(id, ubicacionOrigen, ubicacionDestino, cantidad);
+            super.mostrarMensaje(respuesta);
         }
-        super.mostrarMensaje("Ubicación origen: ");
-        String ubicacionOrigen = leerUbicacion(sc);
-
-        super.mostrarMensaje("Ubicación destino: ");
-        String ubicacionDestino = leerUbicacion(sc);
-
-        super.mostrarMensaje("Cantidad a mover: ");
-        int cantidad = leerCantidad(sc);
-
-        String respuesta = movimientoCtrl.generarOrdenMovInterno(id, ubicacionOrigen, ubicacionDestino, cantidad);
-        super.mostrarMensaje(respuesta);
     }
 
 
-    public int leerIdProducto (Scanner sc){
+    public int leerIdProducto (){
         System.out.print("ID de producto: ");
         return super.leerEntero(sc);
     }
 
-    public String leerUbicacion(Scanner sc){
+    public String leerUbicacion(){
         String ubi = sc.nextLine();
         return ubi;
     }
 
-    public int leerCantidad (Scanner sc){
+    public int leerCantidad (){
         int cantidad = super.leerEntero(sc);
         return cantidad;
     }

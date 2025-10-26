@@ -19,10 +19,6 @@ public class RackService {
 
     public Rack crearRack(int idNave) {
         int nuevoId = getProximoRackId();
-        if (racksMap.containsKey(nuevoId)) {
-            System.out.println("Ya existe un rack con ese código.");
-            return racksMap.get(nuevoId);
-        }
 
         Rack nuevoRack = new Rack(nuevoId, idNave);
         racksMap.put(nuevoId, nuevoRack);
@@ -41,6 +37,10 @@ public class RackService {
         List<Rack> racks = RackRepository.cargarRacks();
         for (Rack r : racks) {
             racksMap.put(r.getIdRack(), r);
+            for (Ubicacion u : r.getUbicaciones()){ //carga las ubicaciones del rack al map de ubicaciones
+                stockService.registrarUbicacion(u);
+            }
+
         }
     }
 
@@ -53,6 +53,12 @@ public class RackService {
     }
 
     private int getProximoRackId(){
-        return (racksMap.size() + 1);        
-    }
+        int idAnterior = 0;
+        for (int id : racksMap.keySet()) {
+            if (id > idAnterior) {
+                idAnterior = id;
+            }
+        }
+    return idAnterior + 1;
+    }     
 }

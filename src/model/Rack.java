@@ -20,7 +20,7 @@ public class Rack {
     private void generarUbicaciones(){
         for (int f = 1; f <= filas; f++) {
             for (int c = 1; c <= columnas; c++) {
-                String codigo = this.idNave + this.idRack + "-" + f + "-" + c; //1-1-3
+                String codigo = this.idNave +"-"+ this.idRack + "-" + f + "-" + c; //1-1-3
                 ubicaciones.add(new Ubicacion(codigo, this.idNave, this.idRack, f, c));
             }
         }

@@ -2,6 +2,7 @@ package services;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -100,7 +101,7 @@ public class StockService {
         }
 
         //buscar stock existente
-        StockUbicacion stockExistente = buscarStockUbicacion(idProducto, ubicacionCodigo);
+    StockUbicacion stockExistente = buscarStockUbicacion(idProducto, ubicacionCodigo);
         if (stockExistente != null) {
             stockExistente.setCantidad(stockExistente.getCantidad() + cantidad);
         } else {
@@ -150,6 +151,7 @@ public class StockService {
 }
 
     public boolean moverStockEntreUbicaciones(int idProducto, String codigoUbiOrigen, String codigoUbiDestino, int cantidad) {
+        
         if (retirarStockDeUbicacion(idProducto, codigoUbiOrigen, cantidad)) {
             if (agregarStockAUbicacion(idProducto, codigoUbiDestino, cantidad)) {
                 return true;
@@ -210,27 +212,32 @@ public class StockService {
         return result;
     }
 
-    private Map<String, Ubicacion> getUbicacionesDisponibles() {
-        Map<String, Ubicacion> ubiDisponibles = new HashMap<>();
-
+    private List<String> getUbicDisponiblesSinOrden(int idRack) {
+        List<String> ubiDisponibles = new ArrayList<>();
+        
         for (String codigo : ubicacionesMap.keySet()) {
             Ubicacion ubicacion = ubicacionesMap.get(codigo);
-            if (!ubicacion.getUbicacionLlena()){
-                ubiDisponibles.put(codigo, ubicacion);
+            if (!ubicacion.getUbicacionLlena() && ubicacion.getIdRack()==idRack){
+                ubiDisponibles.add(codigo);
             }
         }
         return ubiDisponibles;
     }
 
-    public Stream<Ubicacion> listarUbiDisponiblesOrdenadas(){
-        return getUbicacionesDisponibles().values().stream()          //este berenjenal lista en orden ascendente las ubicaciones
-            .sorted(Comparator.comparingInt((Ubicacion u) -> u.getIdRack())
-            .thenComparingInt(Ubicacion::getFila)
-            .thenComparingInt(Ubicacion::getColumna));
+    public List<String> listarUbicacionesDisponiblesRack(int idRack){
+        List<String> ordenadas = getUbicDisponiblesSinOrden(idRack);
+        Collections.sort(ordenadas);
+        return ordenadas;
     }
 
-    private int getProximoProdId(){
-        return(productosMap.size() + 1);
+    private int getProximoProdId() {
+    int idAnterior = 0;
+    for (int id : productosMap.keySet()) {
+        if (id > idAnterior) {
+            idAnterior = id;
+        }
+    }
+    return idAnterior + 1;
     }
 
     public boolean eliminarProductoPorId(int idProducto) {
@@ -240,15 +247,15 @@ public class StockService {
     }
     // Verifica si tiene stock asociado
     List<StockUbicacion> stockAsociado = stockPorProducto.get(idProducto);
-    if (stockAsociado != null && !stockAsociado.isEmpty()) {
-        System.out.println("ERROR: No se puede eliminar el producto. Tiene stock asociado.");
-        return false;
-    }
+        if (stockAsociado != null && !stockAsociado.isEmpty()) {
+            System.out.println("ERROR: No se puede eliminar el producto. Tiene stock asociado.");
+            return false;
+        }
 
-    productosMap.remove(idProducto);
-    ProductoDAO.eliminarProductoDelArchivo(idProducto, productosMap);
-    System.out.println("Producto eliminado correctamente.");
-    return true;
+        productosMap.remove(idProducto);
+        ProductoDAO.eliminarProductoDelArchivo(idProducto, productosMap);
+        System.out.println("Producto eliminado correctamente.");
+        return true;
     }
 
     //consultas privadas

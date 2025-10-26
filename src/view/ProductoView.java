@@ -25,7 +25,7 @@ public class ProductoView extends View{
             System.out.println("4. Buscar producto por ID");
             System.out.println("5. Eliminar producto");
             System.out.println("0. Volver");
-            System.out.println("=======================================");
+            System.out.println("======================================");
 
             int opcion = super.leerEntero(sc);
 
@@ -102,14 +102,13 @@ public class ProductoView extends View{
             super.mostrarMensaje("No se encontró ningún producto con esa ID.");
         } else {
             super.mostrarMensaje(producto);
-        }
+            String confirm = leerAprobacion(sc);
 
-        String confirm = leerAprobacion(sc);
-
-        if (confirm.equals("s")) {
-            productoCtrl.eliminarProducto(id);
-        } else {
-            super.mostrarMensaje("Operación cancelada.");
+            if (confirm.equals("s")) {
+                productoCtrl.eliminarProducto(id);
+            } else {
+                super.mostrarMensaje("Operación cancelada.");
+            }
         }
     }
 

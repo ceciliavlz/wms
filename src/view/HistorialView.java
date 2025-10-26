@@ -45,7 +45,7 @@ public class HistorialView extends View {
         movimientos = historialCtrl.verHistorialMov(id);
 
         if(movimientos.isEmpty()){
-
+            super.mostrarMensaje("No se encontró producto con esa ID");
         } else {
             super.mostrarMensaje(" TIPO --- | FECHA --- | CANTIDAD ---");
             for (String mov : movimientos) {

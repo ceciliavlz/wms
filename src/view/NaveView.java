@@ -18,13 +18,14 @@ public class NaveView extends View{
     boolean salir = false;
 
         while (!salir) {
-        System.out.println("\n==== Menú Naves =======================");
-        System.out.println("1. Ver naves");
-        System.out.println("2. Crear nave");
-        System.out.println("3. Crear rack en nave");
-        System.out.println("4. Listar racks en nave");   
-        System.out.println("0. Volver");
-        System.out.println("==============================================");
+        super.mostrarMensaje("\n==== Menú Naves =======================");
+        super.mostrarMensaje("1. Ver naves");
+        super.mostrarMensaje("2. Crear nave");
+        super.mostrarMensaje("3. Crear rack en nave");
+        super.mostrarMensaje("4. Listar racks en nave");   
+        super.mostrarMensaje("5. Listar ubicaciones disponibles de un rack");
+        super.mostrarMensaje("0. Volver");
+        super.mostrarMensaje("==============================================");
 
             int opcion = super.leerEntero(sc);
 
@@ -33,6 +34,7 @@ public class NaveView extends View{
                 case 2 -> crearNuevaNave();
                 case 3 -> crearRack();
                 case 4 -> listarRacks();
+                case 5 -> listarUbicacionesDisponiblesRack();
                 case 0 -> { 
                     salir = true;
                     return;
@@ -93,8 +95,28 @@ public class NaveView extends View{
             super.mostrarMensaje("No hay naves registradas."); }
     }
 
+    public void listarUbicacionesDisponiblesRack(){
+        int idRack = pedirIdRack();
+        List<String> ubicaciones = naveCtrl.listarUbicacionesRack(idRack);
+
+        if (ubicaciones.isEmpty()){
+            super.mostrarMensaje("No hay rack con esa ID");
+        } else {
+            super.mostrarMensaje("NAVE-RACK-FILA-COL: \nN-R-F-C");
+            for (String u : ubicaciones){
+                super.mostrarMensaje(u);
+            }
+        }
+    }
+
     public int pedirIdNave(){
         super.mostrarMensaje("Ingrese ID nave: ");
+        int idNave = super.leerEntero(sc);
+        return idNave;
+    }
+
+    public int pedirIdRack(){
+        super.mostrarMensaje("Ingrese ID rack: ");
         int idNave = super.leerEntero(sc);
         return idNave;
     }

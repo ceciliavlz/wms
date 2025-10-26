@@ -62,7 +62,13 @@ public class NaveService {
     }
 
     private int getProximoNaveId() {
-        return (navesMap.size() + 1);
+        int idAnterior = 0;
+        for (int id : navesMap.keySet()) {
+            if (id > idAnterior) {
+                idAnterior = id;
+            }
+        }
+        return idAnterior + 1;
     }
 
     public Nave getNavePorId(int idNave) {

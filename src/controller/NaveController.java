@@ -5,13 +5,16 @@ import java.util.List;
 import model.Nave;
 import model.Rack;
 import services.NaveService;
+import services.StockService;
 
 
 public class NaveController {
     NaveService naveService;
+    private StockService stockService;
 
-    public NaveController(NaveService naveService){
+    public NaveController(NaveService naveService, StockService stockService){
         this.naveService = naveService;
+        this.stockService = stockService;
     }
 
     public int crearNave() {  
@@ -48,4 +51,9 @@ public class NaveController {
     public boolean hayNaves(){
         return naveService.hayNaves();
     }
+
+    public List<String> listarUbicacionesRack(int idRack){
+        return stockService.listarUbicacionesDisponiblesRack(idRack);
+    }
+    
 }
