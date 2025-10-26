@@ -10,7 +10,7 @@ import services.StockService;
 
 public class NaveController {
     private final NaveService naveService;
-    private StockService stockService;
+    private final StockService stockService;
 
     public NaveController(NaveService naveService, StockService stockService){
         this.naveService = naveService;
