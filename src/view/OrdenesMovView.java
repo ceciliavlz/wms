@@ -108,7 +108,6 @@ public class OrdenesMovView extends View{
         for(String ubicaciones : movimientoCtrl.mostrarUbicacionesDeProducto(idProd)){
             super.mostrarMensaje(ubicaciones);
         }
-        super.mostrarMensaje("\n");
     }
     
     private int leerIdProducto (){
@@ -117,7 +116,7 @@ public class OrdenesMovView extends View{
     }
 
     private String leerUbicacion(){
-        String ubi = sc.nextLine();
+        String ubi = super.leerStringSinComas(sc);
         return ubi;
     }
 

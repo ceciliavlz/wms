@@ -3,7 +3,6 @@ package view;
 import java.util.List;
 import java.util.Scanner;
 import controller.ProductoController;
-import model.Producto;
 
 public class ProductoView extends View{
     private final ProductoController productoCtrl;
@@ -114,19 +113,19 @@ public class ProductoView extends View{
 
     private String pedirDescripcion(){
         super.mostrarMensaje("Descripción: ");
-        String desc = sc.nextLine();
+        String desc = super.leerStringSinComas(sc);
         return desc;
     }
 
     private double pedirPeso(){
         super.mostrarMensaje("Peso unitario (en Kg): ");
-        double peso = sc.nextDouble();
+        double peso = super.leerDouble(sc);
         return peso;
     }
 
     private double pedirCapacidad(){
        super.mostrarMensaje("Capacidad del contenedor: ");
-        double capacidad = sc.nextDouble();
+        double capacidad = super.leerDouble(sc);
         return capacidad;
     }
 
