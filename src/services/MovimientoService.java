@@ -8,42 +8,42 @@ import model.OrdenMovimiento;
 import repositories.OrdenMovRepository;
 
 public class MovimientoService {
-    private StockService StockService;
+    private StockService stockService;
     private List<OrdenMovimiento> historialMovimientos = new ArrayList<>();
 
-    public MovimientoService(StockService StockService) {
-        this.StockService = StockService;
+    public MovimientoService(StockService stockService) {
+        this.stockService = stockService;
         cargarHistorial();
     }
 
-    public boolean procesarOrdenMovimiento(OrdenMovimiento orden) {
-        boolean ok = false;
-        orden.setIdOrdenMov(getProximoOrdenId());   //asigna id automatico
+    public String procesarOrdenMovimiento(OrdenMovimiento orden) {
+        String resultado = "";
+        orden.setIdOrdenMov(getProximoOrdenId());   //asigna id autoincremental
         switch (orden.getTipoMovimientoOrden()) {
             case INGRESO:
-                ok = StockService.agregarStockAUbicacion(
+                resultado = stockService.agregarStockAUbicacion(
                     orden.getIdProducto(), 
                     orden.getUbicacion(), 
                     orden.getCantidad());
                     break;
             case EGRESO:
-                ok = StockService.retirarStockDeUbicacion(
+                resultado = stockService.retirarStockDeUbicacion(
                     orden.getIdProducto(), 
                     orden.getUbicacion(), 
                     orden.getCantidad());
                     break;
             case INTERNO:
-                ok = StockService.moverStockEntreUbicaciones(
+                resultado = stockService.moverStockEntreUbicaciones(
                     orden.getIdProducto(), 
                     orden.getUbicacionOrigen(), 
                     orden.getUbicacionDestino(), 
                     orden.getCantidad());
                     break;
         }
-        if (ok) {
+        if (resultado.startsWith("OK")) {
             historialMovimientos.add(orden);
         }
-        return ok;
+        return resultado;
     }   
 
     public void guardarHistorial() {

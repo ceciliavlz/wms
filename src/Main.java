@@ -31,7 +31,7 @@ public class Main {
         //controllers
         HistorialController historialCtrl = new HistorialController(movService);
         ProductoController productoCtrl = new ProductoController(stockService);
-        MovimientoController movimientoCtrl = new MovimientoController(movService);
+        MovimientoController movimientoCtrl = new MovimientoController(movService, stockService);
         NaveController naveCtrl = new NaveController(naveService, stockService);
         ConsultasController consultasCtrl = new ConsultasController(stockService);
 

@@ -3,7 +3,6 @@ package view;
 import java.util.Scanner;
 
 import controller.MovimientoController;
-import controller.NaveController;
 import controller.ProductoController;
 
 public class OrdenesMovView extends View{
@@ -70,6 +69,7 @@ public class OrdenesMovView extends View{
             super.mostrarMensaje("No se encontró ningún producto con esa ID.");
         } else {
             super.mostrarMensaje(producto);
+            listarUbicacionesProducto(id);
             super.mostrarMensaje("Ingrese codigo ubicación:     (NAVE-RACK-FILA-COLUMNA Ej 1-1-2-3)");
             String ubicacion = leerUbicacion();
             super.mostrarMensaje("Cantidad a quitar: ");
@@ -88,6 +88,7 @@ public class OrdenesMovView extends View{
             super.mostrarMensaje("No se encontró ningún producto con esa ID.");
         } else {
             super.mostrarMensaje(producto);
+            listarUbicacionesProducto(id);
             super.mostrarMensaje("Ubicación origen: ");
             String ubicacionOrigen = leerUbicacion();
 
@@ -102,7 +103,13 @@ public class OrdenesMovView extends View{
         }
     }
 
-
+    private void listarUbicacionesProducto(int idProd){
+        super.mostrarMensaje("Ubicado en: ");
+        for(String ubicaciones : movimientoCtrl.mostrarUbicacionesDeProducto(idProd)){
+            super.mostrarMensaje(ubicaciones);
+        }
+        super.mostrarMensaje("\n");
+    }
     public int leerIdProducto (){
         System.out.print("ID de producto: ");
         return super.leerEntero(sc);

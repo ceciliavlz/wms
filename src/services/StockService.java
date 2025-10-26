@@ -83,21 +83,19 @@ public class StockService {
     }
 
     //stock
-    public boolean agregarStockAUbicacion(int idProducto, String ubicacionCodigo, int cantidad) {
+    public String agregarStockAUbicacion(int idProducto, String ubicacionCodigo, int cantidad) {
         Producto prod = productosMap.get(idProducto);
         Ubicacion ubi = ubicacionesMap.get(ubicacionCodigo);
 
         if (prod == null || ubi == null) {
-            System.out.println("ERROR: Producto o ubicación no encontrados.");
-            return false;
+            return "ERROR: Producto o ubicación no encontrados.";
         }
 
         double pesoActual = pesoEnUbicacion(ubicacionCodigo);
         double pesoNuevo = prod.getPesoUnitario() * cantidad;
 
         if (pesoActual + pesoNuevo > Ubicacion.getPesoMaximo()) {
-            System.out.println("ERROR: No se puede agregar. Supera el peso máximo en " + ubicacionCodigo);
-            return false;
+            return "ERROR: No se puede agregar. Supera el peso máximo en " + ubicacionCodigo;
         }
 
         //buscar stock existente
@@ -122,49 +120,41 @@ public class StockService {
             ubicacionesMap.get(ubicacionCodigo).setUbicacionLlena(false);
         }
 
-        return true;
+        return "OK: Stock agregado correctamente en " + ubicacionCodigo;
     }
 
-    public boolean retirarStockDeUbicacion(int idProducto, String codigoUbicacion, int cantidad) {
+    public String retirarStockDeUbicacion(int idProducto, String codigoUbicacion, int cantidad) {
 
         StockUbicacion stockExistente = buscarStockUbicacion(idProducto, codigoUbicacion);
 
         if (stockExistente == null) {
-            System.out.println("ERROR: No existe stock para ese producto en esa ubicación.");
-            return false;
+            return "ERROR: No existe stock para ese producto en esa ubicación.";
         }
 
         if (stockExistente.getCantidad() < cantidad) {
-            System.out.println("ERROR: Stock insuficiente para retirar.");
-            return false;
+            return "ERROR: Stock insuficiente para retirar.";
         }
 
-        if (pesoEnUbicacion(codigoUbicacion) >= Ubicacion.getPesoMaximo()) {
-            ubicacionesMap.get(codigoUbicacion).setUbicacionLlena(true);
-        } else {
-            ubicacionesMap.get(codigoUbicacion).setUbicacionLlena(false);
-        }
         //actualiza la lista y todos los maps porq es una referencia
         stockExistente.setCantidad(stockExistente.getCantidad() - cantidad);
+        Ubicacion ubi = ubicacionesMap.get(codigoUbicacion);
+        ubi.setUbicacionLlena(pesoEnUbicacion(codigoUbicacion) >= Ubicacion.getPesoMaximo());
 
-        return true;
+        return "OK: Se retiraron " + cantidad + " unidades de " + codigoUbicacion;
 }
 
-    public boolean moverStockEntreUbicaciones(int idProducto, String codigoUbiOrigen, String codigoUbiDestino, int cantidad) {
-        
-        if (retirarStockDeUbicacion(idProducto, codigoUbiOrigen, cantidad)) {
-            if (agregarStockAUbicacion(idProducto, codigoUbiDestino, cantidad)) {
-                return true;
-            } else {
-                // Revertir retiro si no se puede agregar en destino
-                agregarStockAUbicacion(idProducto, codigoUbiOrigen, cantidad);
-                System.out.println("ERROR: No se pudo mover el stock. Operación revertida.");
-                return false;
-            }
-        } else {
-            System.out.println("ERROR: No se pudo retirar el stock de la ubicación origen.");
-            return false;
+    public String moverStockEntreUbicaciones(int idProducto, String codigoUbiOrigen, String codigoUbiDestino, int cantidad) {
+        String resultRetirarStock = retirarStockDeUbicacion(idProducto, codigoUbiOrigen, cantidad);
+        if (!resultRetirarStock.startsWith("OK")) {
+            return "ERROR: No se pudo retirar el stock de la ubicación origen.";
         }
+        String resultAgregarStock = agregarStockAUbicacion(idProducto, codigoUbiDestino, cantidad);
+        if (!resultAgregarStock.startsWith("OK")) {
+            // Revertir retiro si no se puede agregar en destino
+            agregarStockAUbicacion(idProducto, codigoUbiOrigen, cantidad);
+            return "ERROR: No se pudo mover el stock. Operación revertida." + resultAgregarStock;
+        }
+        return "OK: Stock movido de "+codigoUbiOrigen+" a "+codigoUbiDestino;
     }
 
     //consultas
