@@ -2,6 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import model.Nave;
 import model.Rack;
 import services.NaveService;
@@ -55,5 +57,13 @@ public class NaveController {
     public List<String> listarUbicacionesRack(int idRack){
         return stockService.listarUbicacionesDisponiblesRack(idRack);
     }
-    
+
+    public List<String> calcularPesosRack(int idRack){
+        List<String> resultado = new ArrayList<String>();
+
+        for (Map.Entry<String,Double> peso : stockService.pesosDeRack(idRack).entrySet()){
+            resultado.add(peso.getKey() +": "+peso.getValue() +"kg.");
+        }
+        return resultado;
+    }
 }

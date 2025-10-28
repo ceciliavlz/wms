@@ -40,7 +40,6 @@ public class RackService {
             for (Ubicacion u : r.getUbicaciones()){ //carga las ubicaciones del rack al map de ubicaciones
                 stockService.registrarUbicacion(u);
             }
-
         }
     }
 

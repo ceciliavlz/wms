@@ -39,7 +39,7 @@ public class HistorialView extends View {
     }
 
     private void verHistorialDeMovimientos(){
-        int id = pedirIdProducto(sc);
+        int id = pedirIdProducto();
 
         List<String> movimientos = new ArrayList<String>();
         movimientos = historialCtrl.verHistorialMov(id);
@@ -54,7 +54,7 @@ public class HistorialView extends View {
         }
     }
 
-    private int pedirIdProducto(Scanner sc) {
+    private int pedirIdProducto() {
         System.out.print("Ingrese el ID del producto: ");
         return super.leerEntero(sc);
     }

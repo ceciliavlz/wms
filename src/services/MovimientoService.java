@@ -40,7 +40,8 @@ public class MovimientoService {
                     orden.getCantidad());
                     break;
         }
-        if (resultado.startsWith("OK")) {
+        System.out.println(resultado.startsWith("OK"));
+        if (resultado.startsWith("OK:")) {
             historialMovimientos.add(orden);
         }
         return resultado;

@@ -1,6 +1,8 @@
 package view;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Scanner;
 import controller.NaveController;
 
@@ -23,6 +25,7 @@ public class NaveView extends View{
         super.mostrarMensaje("3. Crear rack en nave");
         super.mostrarMensaje("4. Listar racks en nave");   
         super.mostrarMensaje("5. Listar ubicaciones disponibles de un rack");
+        super.mostrarMensaje("6. Mostrar peso de un rack");
         super.mostrarMensaje("0. Volver");
         super.mostrarMensaje("==============================================");
 
@@ -34,6 +37,7 @@ public class NaveView extends View{
                 case 3 -> crearRack();
                 case 4 -> listarRacks();
                 case 5 -> listarUbicacionesDisponiblesRack();
+                case 6 -> pesoUbicacionesRack();
                 case 0 -> { 
                     salir = true;
                     return;
@@ -105,6 +109,20 @@ public class NaveView extends View{
             for (String u : ubicaciones){
                 super.mostrarMensaje(u);
             }
+        }
+    }
+
+    private void pesoUbicacionesRack(){
+        int idRack = pedirIdRack();
+        List<String> respuesta = naveCtrl.calcularPesosRack(idRack);
+        Collections.reverse(respuesta);        
+        if (naveCtrl.calcularPesosRack(idRack).isEmpty()){
+            super.mostrarMensaje("No se econtro un rack con ese ID");
+            return;
+        }
+        super.mostrarMensaje("==== Peso de ubicaciones rack "+idRack+" ====");
+        for (String r : respuesta){
+            super.mostrarMensaje(r);
         }
     }
 

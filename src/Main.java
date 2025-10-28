@@ -67,15 +67,16 @@ public class Main {
                 case 6 -> consultasView.mostrarMenuConsultas();
                 case 0 -> { 
                     salir = true;
-                    return;
                  }
                 default -> System.out.println("\nOpción inválida");
             }
         }
         scanner.close();
     
-        movService.guardarHistorial();
-        stockService.guardarEnArchivo();
-        System.out.println("Datos guardados. ¡Hasta luego!");
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            stockService.guardarEnArchivo();
+            movService.guardarHistorial();
+            System.out.println("Datos guardados correctamente al salir.");
+        }));
     }
 }

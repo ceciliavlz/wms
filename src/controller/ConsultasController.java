@@ -22,7 +22,9 @@ public class ConsultasController {
         List<StockUbicacion> stockUbicacion = stockService.getStockPorUbicacion(codigo);
         
         for (StockUbicacion stockPorUbicacion : stockUbicacion) {
-            stock.add(stockPorUbicacion.toString());
+            if (stockPorUbicacion.getCantidad() > 0){
+              stock.add(stockPorUbicacion.toString());
+                }
             }
         return stock;
     }
@@ -30,20 +32,22 @@ public class ConsultasController {
     public List<String> agrupadoPorProducto() {
         List<String> stockProducto = new ArrayList<>();
 
-        stockService.getStockAgrupadoPorProducto().forEach((id, cantidad) ->
-            stockProducto.add("Producto " + id + ": " + cantidad)
-        );
-
+        stockService.getStockAgrupadoPorProducto().forEach((id, cantidad) -> {
+            if (cantidad > 0){
+                stockProducto.add("Producto " + id + ": " + cantidad);
+            }
+        });
         return stockProducto;
     }
 
     public List<String> agrupadoPorUbicacion() {
         List<String> stockProducto = new ArrayList<>();
 
-        stockService.getStockAgrupadoPorUbicacion().forEach((codigo, cantidad) ->
-            stockProducto.add("Ubicación " + codigo + ": " + cantidad)
-        );
-        
+        stockService.getStockAgrupadoPorUbicacion().forEach((codigo, cantidad) ->{
+            if (cantidad > 0){
+                stockProducto.add("Ubicación " + codigo + ": " + cantidad);
+            }
+        });  
         return stockProducto;
     }
 }

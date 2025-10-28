@@ -217,16 +217,6 @@ public class StockService {
         return ordenadas;
     }
 
-    private int getProximoProdId() {
-    int idAnterior = 0;
-    for (int id : productosMap.keySet()) {
-        if (id > idAnterior) {
-            idAnterior = id;
-        }
-    }
-    return idAnterior + 1;
-    }
-
     public boolean eliminarProductoPorId(int idProducto) {
     if (!productosMap.containsKey(idProducto)) {
         System.out.println("ERROR: No existe un producto con ese ID.");
@@ -245,7 +235,29 @@ public class StockService {
         return true;
     }
 
+    public Map<String,Double> pesosDeRack(int idRack){
+        Map<String,Double> pesos = new HashMap<String,Double>();
+        for (Map.Entry<String,Ubicacion> ubicaciones : ubicacionesMap.entrySet()){
+            if (idRack == ubicaciones.getValue().getIdRack()){
+                String codigo = ubicaciones.getKey();
+
+                pesos.put(codigo,pesoEnUbicacion(codigo));
+            }
+        }
+        return pesos;
+    }
+
     //consultas privadas
+    private int getProximoProdId() {
+        int idAnterior = 0;
+        for (int id : productosMap.keySet()) {
+            if (id > idAnterior) {
+                idAnterior = id;
+            }
+        }
+        return idAnterior + 1;
+    }
+
     private double pesoEnUbicacion(String ubicacionCodigo) {
         double total = 0;
         List<StockUbicacion> lista = stockPorUbicacion.get(ubicacionCodigo);
