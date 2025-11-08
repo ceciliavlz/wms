@@ -2,7 +2,6 @@ package view;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Scanner;
 import controller.NaveController;
 

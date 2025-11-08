@@ -1,9 +1,11 @@
 package controller;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 import model.Producto;
+import model.StockUbicacion;
 import model.UnidadMedida;
 import services.StockService;
 
@@ -14,7 +16,7 @@ public class ProductoController {
         this.stockService = stockService;
     }
 
-    public String agregarProducto(String descripcion, String unidadMedida, double peso, double capacidad) {
+    public String agregarProducto(String descripcion, String unidadMedida, double peso, double capacidad, int stockMin, String grupo) {
         UnidadMedida unidadMed;
 
         try { 
@@ -23,8 +25,8 @@ public class ProductoController {
             return "";
         }
 
-        Producto p = new Producto(descripcion, unidadMed, peso, capacidad);
-        stockService.registrarProducto(p);
+        Producto p = new Producto(descripcion, unidadMed, peso, capacidad, stockMin, grupo);
+        stockService.registrarProducto(p); //asigna id y codigo con grupo
 
         return p.toString();
     }
@@ -58,5 +60,13 @@ public class ProductoController {
             return false;
         }
         return true;
+    }
+
+    public List<String> mostrarUbicacionesDeProducto(int idProd) {
+        List<String> ubicaciones = new ArrayList<>();
+        stockService.getStockPorProducto(idProd).stream()  
+            .sorted(Comparator.comparing(StockUbicacion::getCodigoUbicacion))
+            .forEach(su -> ubicaciones.add(su.getCodigoUbicacion() + " : " + su.getCantidad() + " unidades"));
+        return ubicaciones;
     }
 }

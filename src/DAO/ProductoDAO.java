@@ -17,7 +17,7 @@ public class ProductoDAO {
         try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_PATH, true))) {
             writer.println(producto.getIdProducto() + "," + producto.getDescripcion() + "," + 
             producto.getUnidadMedida().name() + "," + producto.getPesoUnitario() + "," + 
-            producto.getCapacidad());
+            producto.getCapacidad()+ "," +producto.getStockMinimo()+ "," +producto.getGrupo()+ "," +producto.getCodigo());
         } catch (IOException e) {
             System.out.println("Error guardando producto: " + e.getMessage());
         }
@@ -37,8 +37,12 @@ public class ProductoDAO {
                 UnidadMedida unidad = UnidadMedida.valueOf(partes[2]);
                 double peso = Double.parseDouble(partes[3]);
                 double capacidad = Double.parseDouble(partes[4]);
-                Producto p = new Producto(desc, unidad, peso, capacidad);
+                int stockMin = Integer.parseInt(partes[5]);
+                String grupo = partes[6];
+                String codigo = partes[7];
+                Producto p = new Producto(desc, unidad, peso, capacidad, stockMin, grupo);
                 p.setIdProducto(idProd);
+                p.setCodigo(codigo);
                 productos.add(p);
             }
         } catch (IOException e) {

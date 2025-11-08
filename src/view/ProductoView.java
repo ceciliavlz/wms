@@ -50,8 +50,10 @@ public class ProductoView extends View{
         double peso = pedirPeso();
         double capacidad = pedirCapacidad();
         String unidadMedida = pedirUnidadMedida();
+        int stockMin = pedirStockMin();
+        String grupo = pedirGrupo();
 
-        respuesta = productoCtrl.agregarProducto(descripcion, unidadMedida, peso, capacidad);
+        respuesta = productoCtrl.agregarProducto(descripcion, unidadMedida, peso, capacidad, stockMin, grupo);
 
         if(respuesta.equals("")){
             super.mostrarMensaje("Error al crear producto.");
@@ -131,7 +133,6 @@ public class ProductoView extends View{
 
     private String pedirUnidadMedida(){
         super.mostrarMensaje("Unidad de medida (LITROS | KILOS | UNIDAD | GRAMOS | MILILITROS): ");
-        sc.nextLine();
         String uMed = sc.nextLine();
         return uMed;
     }
@@ -140,6 +141,24 @@ public class ProductoView extends View{
         System.out.println("ID del producto: ");
         int id = super.leerEntero(sc);
         return id;
+    }
+
+    private int pedirStockMin(){
+        System.out.println("Stock minimo del producto: ");
+        int stockMin= super.leerEntero(sc);
+        return stockMin;
+    }
+
+    private String pedirGrupo(){
+        System.out.println("GRUPO: Ingrese opción 1. Materia prima 2. Producto final");
+        int opcion = super.leerEntero(sc);
+        String grupo = "";
+        switch (opcion) {
+            case 1: grupo = "Materia prima"; break;
+            case 2: grupo = "Producto final"; break;
+            default: break;
+        }
+        return grupo;
     }
 
     private String leerAprobacion(){

@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import model.StockUbicacion;
 import services.StockService;
@@ -49,5 +50,13 @@ public class ConsultasController {
             }
         });  
         return stockProducto;
+    }
+
+    public List<String> mostrarUbicacionesDeProducto(int idProd) {
+        List<String> ubicaciones = new ArrayList<>();
+        stockService.getStockPorProducto(idProd).stream()  
+            .sorted(Comparator.comparing(StockUbicacion::getCodigoUbicacion))
+            .forEach(su -> ubicaciones.add(su.getCodigoUbicacion() + " : " + su.getCantidad() + " unidades"));
+        return ubicaciones;
     }
 }
