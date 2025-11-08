@@ -6,11 +6,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import DAO.ProductoDAO;
+import DAO.StockDAO;
 import model.Producto;
 import model.StockUbicacion;
 import model.Ubicacion;
-import repositories.ProductoDAO;
-import repositories.StockRepository;
 
 public class StockService {
     private Map<Integer, Producto> productosMap = new HashMap<>();
@@ -41,7 +42,7 @@ public class StockService {
     //cargar desde archivo
     public void cargarStockDesdeArchivo(){
         try{
-            List<StockUbicacion> stockCargados = StockRepository.cargarStock();
+            List<StockUbicacion> stockCargados = StockDAO.cargarStock();
 
             for (StockUbicacion s : stockCargados){  //armar maps
                 stockLista.add(s);
@@ -61,7 +62,7 @@ public class StockService {
 
     public void guardarEnArchivo() {
         try {
-            StockRepository.guardarStock(stockLista);
+            StockDAO.guardarStock(stockLista);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,11 +1,11 @@
-package repositories;
+package DAO;
 
 import java.io.*;
 import java.util.*;
 
 import model.StockUbicacion;
 
-public class StockRepository {
+public class StockDAO {
 
     private static final String FILE_PATH = "data/stock.csv";
     

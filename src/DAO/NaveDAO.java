@@ -1,10 +1,10 @@
-package repositories;
+package DAO;
 import java.io.*;
 import java.util.*;
 
 import model.Nave;
 
-public class NaveRepository {
+public class NaveDAO {
     private static final String FILE_PATH = "data/naves.csv";
 
     public static void guardarNave(Nave nave) {

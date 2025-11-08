@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import DAO.RackDAO;
 import model.Rack;
 import model.Ubicacion;
-import repositories.RackRepository;
 
 public class RackService {
     private Map<Integer, Rack> racksMap = new HashMap<>();
@@ -28,13 +28,13 @@ public class RackService {
             stockService.registrarUbicacion(u);
         }
         
-        RackRepository.guardarRack(nuevoRack);
+        RackDAO.guardarRack(nuevoRack);
 
         return nuevoRack;
     }
 
     public void cargarRacksDesdeArchivo() {
-        List<Rack> racks = RackRepository.cargarRacks();
+        List<Rack> racks = RackDAO.cargarRacks();
         for (Rack r : racks) {
             racksMap.put(r.getIdRack(), r);
             for (Ubicacion u : r.getUbicaciones()){ //carga las ubicaciones del rack al map de ubicaciones

@@ -1,4 +1,4 @@
-package repositories;
+package DAO;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
@@ -6,7 +6,7 @@ import java.util.*;
 import model.OrdenMovimiento;
 import model.TipoMovimiento;
 
-public class OrdenMovRepository {
+public class OrdenMovDAO {
     private static final String FILE_PATH = "data/movimientos.csv";
 
     public static void guardarOrdenes(List<OrdenMovimiento> ordenes) throws IOException {

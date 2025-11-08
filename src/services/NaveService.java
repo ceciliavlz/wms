@@ -2,9 +2,9 @@ package services;
 
 import java.util.*;
 
+import DAO.NaveDAO;
 import model.Nave;
 import model.Rack;
-import repositories.NaveRepository;
 
 public class NaveService {
     private Map<Integer, Nave> navesMap = new HashMap<>();
@@ -20,7 +20,7 @@ public class NaveService {
         Nave nave = new Nave(nuevoId, new ArrayList<>());
         navesMap.put(nuevoId, nave);
 
-        NaveRepository.guardarNave(nave);
+        NaveDAO.guardarNave(nave);
         return nave;
     }
 
@@ -38,7 +38,7 @@ public class NaveService {
         // Cargar naves y racks desde archivo
     public void cargarDesdeArchivos() {
         // Cargar naves
-        List<Nave> navesCargadas = NaveRepository.cargarNaves();
+        List<Nave> navesCargadas = NaveDAO.cargarNaves();
         for (Nave n : navesCargadas) {
             navesMap.put(n.getIdNave(), n);
         }
