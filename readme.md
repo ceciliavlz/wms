@@ -66,14 +66,18 @@ El proyecto está organizado en base al patrón de diseño MVC (Modelo-Vista-Con
 | --------- |  --------- |
 | **TIPO**  |`int` |
 | **EJEMPLO**  |`1` |
-``` Se guarda el ID de cada nave creada```
+``` 
+Se guarda el ID de cada nave creada
+```
 ---
 ### Racks:
 |racks.csv | idNave |idRack|
 | --------- |  --------- |--------- |
 | **TIPO**  |`int` |`int`|
 | **EJEMPLO**  |`1` | `1`| 
-``` Se guarda el ID de la nave a la que pertenece junto con el ID del rack```
+```
+Se guarda el ID de la nave a la que pertenece junto con el ID del rack
+```
 ---
 ### Productos:
 |productos.csv | idProducto | descripcion | UnidadMedida | Peso unitario(kg) | Capacidad contenedor | Stock minimo | Grupo | Código
@@ -98,7 +102,7 @@ El código de ubicacion se refiere a 1 (Nave 1) - 1 (Rack 1) - fila 1 - columna 
 | --- |  ---|  --- |--- |--- |--- |---|--- |--- |
 | **TIPO**  |`TipoMovimiento` |`int` |`int` |`int` |`LocalDate` |`String` |`String` |`String` |
 | **EJEMPLO INGRESO**  |`INGRESO` |`1`|`3`|`3`|`2025-10-21`|`R1-1-1`|`(vacio)`|`(vacio)`|
-| **EJEMPLO INTERNO**  |`INTERNO` |`2`|`2`|`1`|`2025-10-22`|`(vacio)`|`R1-1-1`|`R1-1-2`|
+| **EJEMPLO INTERNO**  |`INTERNO` |`2`|`2`|`1`|`2025-10-22`|`(vacio)`|`1-1-1-1`|`1-1-1-2`|
 
 Las órdenes de movimiento utilizan diferentes constructores dependiendo de su tipo. Pueden ser de movimiento interno, de ingreso o egreso. Las órdenes de movimiento interno usan en su constructor dos ubicaciones, origen y destino. Las órdenes de ingreso/egreso sólo usan una ubicacion: donde se asigna el producto al ingresarlo (en caso de tipo ingreso), o de donde se quitó al egresarlo (en caso de tipo egreso).
 
