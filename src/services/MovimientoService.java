@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import DAO.OrdenMovDAO;
 import model.OrdenMovimiento;
+import repositories.OrdenMovRepository;
 
 public class MovimientoService {
     private StockService stockService;
@@ -49,14 +49,14 @@ public class MovimientoService {
 
     public void guardarHistorial() {
         try {
-            OrdenMovDAO.guardarOrdenes(historialMovimientos);
+            OrdenMovRepository.guardarOrdenes(historialMovimientos);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void cargarHistorial() {
-        try { historialMovimientos = OrdenMovDAO.cargarOrdenes();
+        try { historialMovimientos = OrdenMovRepository.cargarOrdenes();
         } catch (IOException e) {
             e.printStackTrace();
         }

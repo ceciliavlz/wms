@@ -6,12 +6,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import DAO.ProductoDAO;
-import DAO.StockDAO;
 import model.Producto;
 import model.StockUbicacion;
 import model.Ubicacion;
+import repositories.ProductoDAO;
+import repositories.StockRepository;
 
 public class StockService {
     private Map<Integer, Producto> productosMap = new HashMap<>();
@@ -29,25 +28,10 @@ public class StockService {
     }
 
     //registrar en map
-    public int registrarProducto(Producto p) {
-        String codigo = "";
-        int id = getProximoProdId();
-
-        p.setIdProducto(id);    //setea id automatico
-        
-        switch (p.getGrupo()) {
-            case "Materia prima": codigo = "MP-0"+id;
-                break;
-            case "Producto final": codigo = "PF-0"+id;
-                break;
-            case "Producto reenvasado": codigo = "PR-0"+id;
-                break;               
-        }
-
-        p.setCodigo(codigo);
+    public void registrarProducto(Producto p) {
+        p.setIdProducto(getProximoProdId());    //setea id automatico
         productosMap.put(p.getIdProducto(), p);
         ProductoDAO.guardarProducto(p);
-        return id;
     }
 
     public void registrarUbicacion(Ubicacion u) {
@@ -57,7 +41,7 @@ public class StockService {
     //cargar desde archivo
     public void cargarStockDesdeArchivo(){
         try{
-            List<StockUbicacion> stockCargados = StockDAO.cargarStock();
+            List<StockUbicacion> stockCargados = StockRepository.cargarStock();
 
             for (StockUbicacion s : stockCargados){  //armar maps
                 stockLista.add(s);
@@ -77,7 +61,7 @@ public class StockService {
 
     public void guardarEnArchivo() {
         try {
-            StockDAO.guardarStock(stockLista);
+            StockRepository.guardarStock(stockLista);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,6 +74,7 @@ public class StockService {
         }
     }
 
+    //prducto nuevo
     public Producto getProductoPorId(int id){
         return(productosMap.get(id));
     }

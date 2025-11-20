@@ -1,1 +1,33 @@
 data
+# ============================
+# NetBeans / Java (Ant) Project
+# ============================
+
+# --- Carpetas generadas automáticamente ---
+build/
+dist/
+
+# Contenido privado de NetBeans (paths locales, configs personales)
+nbproject/private/
+
+# Archivos generados
+*.class
+*.log
+
+# Build artifacts
+*.jar
+*.war
+*.ear
+
+# IDE specific
+*.iml
+.idea/
+.vscode/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# NetBeans compile-time cache
+nbproject/Makefile-*
+nbproject/Package-*

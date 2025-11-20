@@ -105,7 +105,7 @@ public class OrdenesMovView extends View{
 
     private void listarUbicacionesProducto(int idProd){
         super.mostrarMensaje("Ubicado en: ");
-        for(String ubicaciones : productoCtrl.mostrarUbicacionesDeProducto(idProd)){
+        for(String ubicaciones : movimientoCtrl.mostrarUbicacionesDeProducto(idProd)){
             super.mostrarMensaje(ubicaciones);
         }
     }
