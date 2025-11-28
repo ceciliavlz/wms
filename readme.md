@@ -66,23 +66,27 @@ El proyecto está organizado en base al patrón de diseño MVC (Modelo-Vista-Con
 | --------- |  --------- |
 | **TIPO**  |`int` |
 | **EJEMPLO**  |`1` |
-``` Se guarda el ID de cada nave creada```
+``` 
+Se guarda el ID de cada nave creada
+```
 ---
 ### Racks:
 |racks.csv | idNave |idRack|
 | --------- |  --------- |--------- |
 | **TIPO**  |`int` |`int`|
 | **EJEMPLO**  |`1` | `1`| 
-``` Se guarda el ID de la nave a la que pertenece junto con el ID del rack```
+```
+Se guarda el ID de la nave a la que pertenece junto con el ID del rack
+```
 ---
 ### Productos:
 |productos.csv | idProducto | descripcion | UnidadMedida | Peso unitario(kg) | Capacidad contenedor | Stock minimo | Grupo | Código
 | --------- |  --------- |  --------- |-------- |-------- |-------- |-------- |-------- |-------- |
 | **TIPO**  |`int` |`String` |`enum`|`double`| `double`| `int`| `String`| `String`|
 | **EJEMPLO**  |`1` |`Yerba Union 500gr` |`GRAMOS` |`0,5`|`500`|`200`|`Producto final`| `PF-01`|
-```
+
 El peso unitario se debe ingresar en kg para llevar control del peso máximo por ubicación. La capacidad del contenedor se mide en la unidad de medida ingresada para el producto y es lo que cambia al realizar una transformación. El grupo organiza los productos en "Materia prima", "Producto final" y "Producto reenvazado". El código del producto es una abreviación del grupo y su id.
-```
+
 ---
 ### Stock:
 |stock.csv | idProducto | codigoUbicacion |cantidad |
@@ -98,10 +102,10 @@ El código de ubicacion se refiere a 1 (Nave 1) - 1 (Rack 1) - fila 1 - columna 
 | --- |  ---|  --- |--- |--- |--- |---|--- |--- |
 | **TIPO**  |`TipoMovimiento` |`int` |`int` |`int` |`LocalDate` |`String` |`String` |`String` |
 | **EJEMPLO INGRESO**  |`INGRESO` |`1`|`3`|`3`|`2025-10-21`|`R1-1-1`|`(vacio)`|`(vacio)`|
-| **EJEMPLO INTERNO**  |`INTERNO` |`2`|`2`|`1`|`2025-10-22`|`(vacio)`|`R1-1-1`|`R1-1-2`|
-```
+| **EJEMPLO INTERNO**  |`INTERNO` |`2`|`2`|`1`|`2025-10-22`|`(vacio)`|`1-1-1-1`|`1-1-1-2`|
+
 Las órdenes de movimiento utilizan diferentes constructores dependiendo de su tipo. Pueden ser de movimiento interno, de ingreso o egreso. Las órdenes de movimiento interno usan en su constructor dos ubicaciones, origen y destino. Las órdenes de ingreso/egreso sólo usan una ubicacion: donde se asigna el producto al ingresarlo (en caso de tipo ingreso), o de donde se quitó al egresarlo (en caso de tipo egreso).
-```
+
 ---
 ### Ordenes de ransformación:
 |transformaciones.csv | idOrdenTransf | idProdEntrada | ubicacionProdEntrada | cantEntrada | idProdTransformado | ubicacionProdSalida| cantidadSalida | fecha
@@ -109,10 +113,10 @@ Las órdenes de movimiento utilizan diferentes constructores dependiendo de su t
 | **TIPO**  |`int` |`int` |`String`|`int`| `int`| `String`| `int`| `LocalDate`|
 | **EJEMPLO**  |`1` |`1` |`1-1-1-1` |`10`|`2`|`1-1-1-3`|`100`| `2025-11-08`|
 
-```
-Las ordenes de transformación reenvasan los productos de tipo materia prima, cambiando la capacidad del contenedor.
-```
 
+Las ordenes de transformación reenvasan los productos de tipo materia prima, cambiando la capacidad del contenedor.
+
+---
 ## Funcionalidades Principales
 - Crear y listar **naves**, **racks** y **ubicaciones**.
 - Registrar un catálogo de **productos** con sus datos correspondientes.
@@ -153,7 +157,7 @@ Ingrese ID nave: 1
 Rack de ID 1 creado con éxito.
 ```
 Después de crear al menos una nave, al menos 1 rack y registrar al menos 1 producto, ya se puede comenzar a realizar cualquiera de las demás funcionalidades disponibles.
-
+---
 ## Flujo del programa
 
 INICIO
