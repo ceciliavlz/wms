@@ -9,6 +9,7 @@ import view.OrdenesMovView;
 import view.ProductoView;
 import view.TransformacionView;
 import view.View;
+import view.gui.MainGUI;
 import services.MovimientoService;
 import services.NaveService;
 import services.RackService;
@@ -19,10 +20,23 @@ import controller.NaveController;
 import controller.ProductoController;
 import controller.TransformacionController;
 
-
 public class Main {
     public static void main(String[] args) {
+        // Si se pasa el argumento "consola", usar interfaz de consola
+        // De lo contrario, usar interfaz gráfica, para mantener el trabajo de Veronica por las dudas
+        if (args.length > 0 && args[0].equals("consola")) {
+            iniciarModoConsola();
+        } else {
+            iniciarModoGUI();
+        }
+    }
 
+    private static void iniciarModoGUI() {
+        // La GUI se inicializa en MainGUI.main()
+        MainGUI.main(new String[0]);
+    }
+
+    private static void iniciarModoConsola() {
         Scanner scanner = new Scanner(System.in);
 
         //SOLO SE INSTANCIAN UNA VEZ
@@ -65,16 +79,29 @@ public class Main {
             int opcion = View.leerEntero(scanner);
 
             switch (opcion) {
-                case 1 -> naveView.mostrarMenuNaves();
-                case 2 -> productoView.mostrarMenuProductos();
-                case 3 -> ordenesMovView.mostrarMenuMovimiento();
-                case 4 -> transfView.mostrarMenuTransformacion();
-                case 5 -> historialView.mostrarMenuHistorial();
-                case 6 -> consultasView.mostrarMenuConsultas();
-                case 0 -> { 
+                case 1:
+                    naveView.mostrarMenuNaves();
+                    break;
+                case 2:
+                    productoView.mostrarMenuProductos();
+                    break;
+                case 3:
+                    ordenesMovView.mostrarMenuMovimiento();
+                    break;
+                case 4:
+                    transfView.mostrarMenuTransformacion();
+                    break;
+                case 5:
+                    historialView.mostrarMenuHistorial();
+                    break;
+                case 6:
+                    consultasView.mostrarMenuConsultas();
+                    break;
+                case 0:
                     salir = true;
-                 }
-                default -> System.out.println("\nOpción inválida");
+                    break;
+                default:
+                    System.out.println("\nOpción inválida");
             }
         }
         scanner.close();

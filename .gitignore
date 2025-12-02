@@ -1,1 +1,13 @@
+# ignorar archivos de datos
 data
+
+# ignorar archivos de sistema ios
+.DS_Store
+
+# ignorar archivos de configuración de vscode e intellij idea
+.vscode
+.idea
+# wms.iml es el archivo de proyecto de intellij idea
+wms.iml
+# out es el directorio de salida del compilador
+out
