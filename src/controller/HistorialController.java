@@ -26,30 +26,33 @@ public class HistorialController {
         List<OrdenTransformacion> historialTransfEntrada = transfService.historialTransfEntrada(id);
 
         for (OrdenMovimiento o : historialMov) {
+            String usuario = o.getUsuarioResponsable() != null ? " | Usuario: " + o.getUsuarioResponsable() : "";
             String descripcion = switch (o.getTipoMovimientoOrden()) {
-                case INGRESO -> "INGRESO | " + o.getFecha() + " | +" + o.getCantidad() + " | U" + o.getUbicacion();
-                case EGRESO -> "EGRESO | " + o.getFecha() + " | -" + o.getCantidad() + " | U" + o.getUbicacion();
+                case INGRESO -> "INGRESO | " + o.getFecha() + " | +" + o.getCantidad() + " | U" + o.getUbicacion() + usuario;
+                case EGRESO -> "EGRESO | " + o.getFecha() + " | -" + o.getCantidad() + " | U" + o.getUbicacion() + usuario;
                 case INTERNO -> "INTERNO | " + o.getFecha() + " | " + o.getCantidad()
-                        + " - U" + o.getUbicacionOrigen() + " | + U" + o.getUbicacionDestino();
+                        + " - U" + o.getUbicacionOrigen() + " | + U" + o.getUbicacionDestino() + usuario;
             };
             registros.add(new RegistroHistorial(o.getFecha(), descripcion));
         }
 
         for (OrdenTransformacion o : historialTransfSalida) {
+            String usuario = o.getUsuarioResponsable() != null ? " | Usuario: " + o.getUsuarioResponsable() : "";
             registros.add(new RegistroHistorial(
                 o.getFecha(),
                 "TRANSFORMACION | " + o.getFecha() + " | +" + o.getCantidadSalida()
                 + " | U" + o.getUbicacionSalida()
-                + " | TRANSFORMADO DE P" + o.getIdProductoEntrada()
+                + " | TRANSFORMADO DE P" + o.getIdProductoEntrada() + usuario
             ));
         }
 
         for (OrdenTransformacion o : historialTransfEntrada) {
+            String usuario = o.getUsuarioResponsable() != null ? " | Usuario: " + o.getUsuarioResponsable() : "";
             registros.add(new RegistroHistorial(
                 o.getFecha(),
                 "TRANSFORMACION | " + o.getFecha() + " | -" + o.getCantidadEntrada()
                 + " | U" + o.getUbicacionProdEntrada()
-                + " | TRANSFORMADO EN P" + o.getIdProductoTransformado()
+                + " | TRANSFORMADO EN P" + o.getIdProductoTransformado() + usuario
             ));
         }
 
@@ -72,6 +75,7 @@ public class HistorialController {
         List<OrdenTransformacion> historial = transfService.getHistorialCompleto();
 
         for (OrdenTransformacion o : historial) {
+            String usuario = o.getUsuarioResponsable() != null ? " | Usuario: " + o.getUsuarioResponsable() : "";
             String descripcion = "TRANSFORMACION | " + o.getFecha()
                 + " | P" + o.getIdProductoEntrada()
                 + " → P" + o.getIdProductoTransformado()
@@ -79,7 +83,8 @@ public class HistorialController {
                 + " +"
                 + o.getCantidadSalida()
                 + " | U entrada: " + o.getUbicacionProdEntrada()
-                + " → U salida: " + o.getUbicacionSalida();
+                + " → U salida: " + o.getUbicacionSalida()
+                + usuario;
 
             registros.add(new RegistroHistorial(o.getFecha(), descripcion));
         }

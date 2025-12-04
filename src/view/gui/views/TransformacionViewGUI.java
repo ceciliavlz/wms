@@ -151,7 +151,7 @@ public class TransformacionViewGUI extends GUIViewBase {
         JButton btnCargar = createButton("Cargar Historial", COLOR_PRIMARY);
         btnCargar.addActionListener(e -> cargarHistorial());
 
-        String[] columnNames = {"ID Orden", "Fecha", "Prod Entrada", "Prod Salida", "Cant Entrada", "Cant Salida", "Ubic Entrada", "Ubic Salida"};
+        String[] columnNames = {"ID Orden", "Fecha", "Prod Entrada", "Prod Salida", "Cant Entrada", "Cant Salida", "Ubic Entrada", "Ubic Salida", "Usuario"};
         modelHistorial = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -192,8 +192,12 @@ public class TransformacionViewGUI extends GUIViewBase {
                 ubicSalida, fecha
             );
 
-            showSuccessMessage("Resultado: " + resultado);
-            limpiarFormulario();
+            if (resultado.startsWith("ERROR:")) {
+                showErrorMessage(resultado);
+            } else {
+                showSuccessMessage("Resultado: " + resultado);
+                limpiarFormulario();
+            }
         } catch (Exception e) {
             showErrorMessage("Error: " + e.getMessage());
         }
@@ -215,7 +219,8 @@ public class TransformacionViewGUI extends GUIViewBase {
                     o.getCantidadEntrada(),
                     o.getCantidadSalida(),
                     o.getUbicacionProdEntrada(),
-                    o.getUbicacionSalida()
+                    o.getUbicacionSalida(),
+                    o.getUsuarioResponsable() != null ? o.getUsuarioResponsable() : "N/A"
                 });
             }
         }

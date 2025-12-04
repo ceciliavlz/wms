@@ -14,6 +14,8 @@ public class OrdenMovimiento {
     //movimiento interno
     private String ubicacionOrigen;
     private String ubicacionDestino;
+    //auditoría
+    private String usuarioResponsable;
     
     //ingreso y egreso
     public OrdenMovimiento(TipoMovimiento tipo, int id, int cantidad, int idProducto, LocalDate fecha, String ubicacion) {
@@ -42,13 +44,15 @@ public class OrdenMovimiento {
     }
     
     public String toStringIngEgr(){
+        String usuario = usuarioResponsable != null ? " | USUARIO: " + usuarioResponsable : "";
         return("FECHA " + this.fecha +" | ID "+ this.idOrdenMov +" | CANT "+ this.cantidad + " | PROD " +
-        this.idProducto + " | UBICACION " + this.ubicacion + " | " + this.tipoMovimientoOrden.name());
+        this.idProducto + " | UBICACION " + this.ubicacion + " | " + this.tipoMovimientoOrden.name() + usuario);
     }
     public String toStringInterno(){
+        String usuario = usuarioResponsable != null ? " | USUARIO: " + usuarioResponsable : "";
         return("FECHA " + this.fecha +" | ID "+ this.idOrdenMov +" | CANT "+ this.cantidad + " | PROD " +
         this.idProducto + " | UB ORIGEN " + this.ubicacionOrigen + " | UB DESTINO " + this.ubicacionDestino 
-        +" | "+ this.tipoMovimientoOrden.name());
+        +" | "+ this.tipoMovimientoOrden.name() + usuario);
     }
 
     public TipoMovimiento getTipoMovimientoOrden() { return tipoMovimientoOrden; }
@@ -83,5 +87,9 @@ public class OrdenMovimiento {
     }
     public void setUbicacionDestino(String ubicacionDestino) {
         this.ubicacionDestino = ubicacionDestino;
+    }
+    public String getUsuarioResponsable() { return usuarioResponsable; }
+    public void setUsuarioResponsable(String usuarioResponsable) {
+        this.usuarioResponsable = usuarioResponsable;
     }   
 }

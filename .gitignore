@@ -11,3 +11,7 @@ data
 wms.iml
 # out es el directorio de salida del compilador
 out
+
+# ignorar archivos compilados
+bin/
+*.class

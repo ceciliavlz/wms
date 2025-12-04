@@ -192,8 +192,14 @@ public class NaveViewGUI extends GUIViewBase {
     // Crea una nueva nave
     private void crearNave() {
         int id = naveCtrl.crearNave();
-        showSuccessMessage("Nave creada con ID " + id);
-        listarNaves();
+        if (id == 0) {
+            // El controlador devuelve 0 cuando no hay permisos o hay otro error
+            // Mostramos mensaje de error genérico
+            showErrorMessage("No se pudo crear la nave. Verifique permisos o datos.");
+        } else {
+            showSuccessMessage("Nave creada con ID " + id);
+            listarNaves();
+        }
     }
 
     // Lista las naves

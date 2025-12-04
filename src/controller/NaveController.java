@@ -7,19 +7,29 @@ import java.util.Map;
 import model.Nave;
 import model.Rack;
 import services.NaveService;
+import services.PermissionService;
 import services.StockService;
 
 
 public class NaveController {
     private final NaveService naveService;
     private final StockService stockService;
+    private PermissionService permissionService;
 
     public NaveController(NaveService naveService, StockService stockService){
         this.naveService = naveService;
         this.stockService = stockService;
     }
 
-    public int crearNave() {  
+    public void setPermissionService(PermissionService permissionService) {
+        this.permissionService = permissionService;
+    }
+
+    public int crearNave() {
+        if (permissionService != null && !permissionService.canWrite()) {
+            System.out.println("ERROR: No tiene permisos para crear naves.");
+            return 0;
+        }  
         Nave nave = naveService.crearNave();    //VALIDAR
         return nave.getIdNave();    
     }
@@ -34,6 +44,10 @@ public class NaveController {
     }
 
     public int crearRack(int idNave){
+        if (permissionService != null && !permissionService.canWrite()) {
+            System.out.println("ERROR: No tiene permisos para crear racks.");
+            return 0;
+        }
         if (naveService.getNavePorId(idNave) == null) {
             return 0; }
         else {
