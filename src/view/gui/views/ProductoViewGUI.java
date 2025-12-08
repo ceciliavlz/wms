@@ -71,7 +71,7 @@ public class ProductoViewGUI extends GUIViewBase {
         JButton btnListar = createButton("Listar Todos los Productos", COLOR_PRIMARY);
         btnListar.addActionListener(e -> listarProductos());
 
-        String[] columnNames = {"ID", "Descripción", "Unidad", "Peso (kg)", "Capacidad", "Stock Mín", "Grupo", "Código"};
+        String[] columnNames = {"ID", "Descripción", "Unidad", "Peso (kg)", "Capacidad", "Grupo", "Stock Mín", "Código"};
         modelProductos = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
