@@ -233,16 +233,16 @@ public class StockService {
     }
 
     public boolean eliminarProductoPorId(int idProducto) {
-    if (!productosMap.containsKey(idProducto)) {
-        System.out.println("ERROR: No existe un producto con ese ID.");
-        return false;
-    }
-    // Verifica si tiene stock asociado
-    List<StockUbicacion> stockAsociado = stockPorProducto.get(idProducto);
-        if (stockAsociado != null && !stockAsociado.isEmpty()) {
-            System.out.println("ERROR: No se puede eliminar el producto. Tiene stock asociado.");
+        if (!productosMap.containsKey(idProducto)) {
+            System.out.println("ERROR: No existe un producto con ese ID.");
             return false;
         }
+        // Verifica si tiene stock asociado
+        List<StockUbicacion> stockAsociado = stockPorProducto.get(idProducto);
+            if (stockAsociado != null && !stockAsociado.isEmpty()) {
+                System.out.println("ERROR: No se puede eliminar el producto. Tiene stock asociado.");
+                return false;
+            }
 
         productosMap.remove(idProducto);
         ProductoDAO.eliminarProductoDelArchivo(idProducto, productosMap);
