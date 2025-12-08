@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import model.Producto;
 import model.UnidadMedida;
 
@@ -58,7 +57,7 @@ public class ProductoDAO {
                 if (p.getIdProducto() != idProducto) {
                     writer.println(p.getIdProducto() + "," + p.getDescripcion() + "," + 
                     p.getUnidadMedida().name() + "," + p.getPesoUnitario() + "," + 
-                    p.getCapacidad());
+                    p.getCapacidad() + "," + p.getStockMinimo() + "," + p.getGrupo() + "," + p.getCodigo());
                 }
             }
             return true;
