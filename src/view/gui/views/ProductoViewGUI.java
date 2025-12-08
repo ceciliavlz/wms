@@ -127,7 +127,7 @@ public class ProductoViewGUI extends GUIViewBase {
         gbc.gridx = 0; gbc.gridy = 3;
         formPanel.add(createLabel("Unidad de medida:"), gbc);
         gbc.gridx = 1;
-        comboUnidadMedida = new JComboBox<>(new String[]{"LITROS", "KILOS", "UNIDAD", "GRAMOS", "MILILITROS"});
+        comboUnidadMedida = new JComboBox<>(new String[]{"LITROS", "KILOS", "UNIDAD", "GRAMOS"});
         comboUnidadMedida.setFont(FONT_NORMAL);
         formPanel.add(comboUnidadMedida, gbc);
 
