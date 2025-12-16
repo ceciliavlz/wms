@@ -1,12 +1,11 @@
 package view.gui.views;
 
-import view.gui.GUIViewBase;
 import controller.ProductoController;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import view.gui.GUIViewBase;
 
 public class ProductoViewGUI extends GUIViewBase {
     private final ProductoController productoCtrl;
@@ -284,7 +283,7 @@ public class ProductoViewGUI extends GUIViewBase {
             int id = readIntFromField(fieldIdEliminar);
             String producto = productoCtrl.buscarProductoPorId(id);
 
-            JPanel eliminarPanel = (JPanel) ((JTabbedPane) getContentPane().getComponent(0)).getComponent(3);
+            JPanel eliminarPanel = (JPanel) ((JTabbedPane) ((JPanel) getContentPane().getComponent(0)).getComponent(1)).getComponent(3);
             JTextArea textArea = (JTextArea) ((JScrollPane) eliminarPanel.getComponent(1)).getViewport().getView();
 
             if (producto.equals("")) {
