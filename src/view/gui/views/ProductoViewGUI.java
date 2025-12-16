@@ -2,6 +2,7 @@ package view.gui.views;
 
 import controller.ProductoController;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -11,6 +12,10 @@ public class ProductoViewGUI extends GUIViewBase {
     private final ProductoController productoCtrl;
     private JTable tableProductos;
     private DefaultTableModel modelProductos;
+    private JTable tableBuscarProducto;
+    private DefaultTableModel modelBuscarProducto;
+    private JTable tableEliminarProducto;
+    private DefaultTableModel modelEliminarProducto;
     
     // Campos del formulario
     private JTextField fieldDescripcion;
@@ -175,11 +180,19 @@ public class ProductoViewGUI extends GUIViewBase {
         btnBuscar.addActionListener(e -> buscarProducto());
         controlPanel.add(btnBuscar);
 
-        JTextArea textArea = new JTextArea(10, 50);
-        textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-        textArea.setEditable(false);
-        textArea.setBorder(BorderFactory.createTitledBorder("Resultado"));
-        JScrollPane scrollPane = new JScrollPane(textArea);
+        String[] columnNames = {"ID", "Descripción", "Unidad", "Peso (kg)", "Capacidad", "Grupo", "Stock Mín", "Código"};
+        modelBuscarProducto = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tableBuscarProducto = new JTable(modelBuscarProducto);
+        tableBuscarProducto.setFont(FONT_NORMAL);
+        tableBuscarProducto.setRowHeight(25);
+        tableBuscarProducto.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        JScrollPane scrollPane = new JScrollPane(tableBuscarProducto);
 
         panel.add(controlPanel, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
@@ -267,17 +280,20 @@ public class ProductoViewGUI extends GUIViewBase {
     }
 
     private void buscarProducto() {
+        modelBuscarProducto.setRowCount(0);
         try {
             int id = readIntFromField(fieldIdBuscar);
             String respuesta = productoCtrl.buscarProductoPorId(id);
+            List<String> respuestaEnLista = new ArrayList<>();
+            respuestaEnLista.add(respuesta);
 
             JPanel buscarPanel = (JPanel) ((JTabbedPane) ((JPanel) getContentPane().getComponent(0)).getComponent(1)).getComponent(2);
             JTextArea textArea = (JTextArea) ((JScrollPane) buscarPanel.getComponent(1)).getViewport().getView();
 
             if (respuesta.equals("")) {
-                textArea.setText("No se encontró ningún producto con esa ID.");
+                showErrorMessage("No se encontró ningún producto con esa ID.");
             } else {
-                textArea.setText(respuesta);
+                generarLineaProducto(respuestaEnLista, modelBuscarProducto);
             }
         } catch (NumberFormatException e) {
             showErrorMessage("Por favor ingrese un ID válido.");
