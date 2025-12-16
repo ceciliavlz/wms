@@ -196,7 +196,6 @@ public class ProductoViewGUI extends GUIViewBase {
 
         panel.add(controlPanel, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
-        panel.putClientProperty("textArea", textArea);
 
         return panel;
     }
@@ -215,15 +214,22 @@ public class ProductoViewGUI extends GUIViewBase {
         btnEliminar.addActionListener(e -> eliminarProducto());
         controlPanel.add(btnEliminar);
 
-        JTextArea textArea = new JTextArea(10, 50);
-        textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-        textArea.setEditable(false);
-        textArea.setBorder(BorderFactory.createTitledBorder("Información del Producto"));
-        JScrollPane scrollPane = new JScrollPane(textArea);
+        String[] columnNames = {"ID", "Descripción", "Unidad", "Peso (kg)", "Capacidad", "Grupo", "Stock Mín", "Código"};
+        modelEliminarProducto = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tableEliminarProducto = new JTable(modelEliminarProducto);
+        tableEliminarProducto.setFont(FONT_NORMAL);
+        tableEliminarProducto.setRowHeight(25);
+        tableEliminarProducto.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        JScrollPane scrollPane = new JScrollPane(tableEliminarProducto);
 
         panel.add(controlPanel, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
-        panel.putClientProperty("textArea", textArea);
 
         return panel;
     }
@@ -287,9 +293,6 @@ public class ProductoViewGUI extends GUIViewBase {
             List<String> respuestaEnLista = new ArrayList<>();
             respuestaEnLista.add(respuesta);
 
-            JPanel buscarPanel = (JPanel) ((JTabbedPane) ((JPanel) getContentPane().getComponent(0)).getComponent(1)).getComponent(2);
-            JTextArea textArea = (JTextArea) ((JScrollPane) buscarPanel.getComponent(1)).getViewport().getView();
-
             if (respuesta.equals("")) {
                 showErrorMessage("No se encontró ningún producto con esa ID.");
             } else {
@@ -304,19 +307,18 @@ public class ProductoViewGUI extends GUIViewBase {
         try {
             int id = readIntFromField(fieldIdEliminar);
             String producto = productoCtrl.buscarProductoPorId(id);
-
-            JPanel eliminarPanel = (JPanel) ((JTabbedPane) ((JPanel) getContentPane().getComponent(0)).getComponent(1)).getComponent(3);
-            JTextArea textArea = (JTextArea) ((JScrollPane) eliminarPanel.getComponent(1)).getViewport().getView();
+            List<String> productoEnLista = new ArrayList<>();
+            productoEnLista.add(producto);
 
             if (producto.equals("")) {
-                textArea.setText("No se encontró ningún producto con esa ID.");
+                showErrorMessage("No se encontró ningún producto con esa ID.");
             } else {
-                textArea.setText(producto);
+                generarLineaProducto(productoEnLista, modelEliminarProducto);
                 int confirm = showConfirmDialog("¿Está seguro que desea eliminar este producto?", "Confirmar eliminación");
                 if (confirm == JOptionPane.YES_OPTION) {
                     productoCtrl.eliminarProducto(id);
                     showSuccessMessage("Producto eliminado correctamente.");
-                    textArea.setText("");
+                    modelEliminarProducto.setRowCount(0);
                     fieldIdEliminar.setText("");
                 }
             }
