@@ -215,6 +215,22 @@ public class ProductoViewGUI extends GUIViewBase {
         return panel;
     }
 
+    private void generarLineaProducto(List<String> productos, DefaultTableModel modelProductos) {
+        // Parsear cada línea del formato de texto
+        for (String producto : productos) {
+            String[] parts = producto.split("\\|");
+            if (parts.length >= 7) {
+                String[] row = new String[8];
+                for (int i = 0; i < parts.length && i < 8; i++) {
+                    row[i] = parts[i].trim();
+                }
+                row[7] = row[0];
+                row[0] = row[0].substring(4);
+                modelProductos.addRow(row);
+            }
+        }
+    }
+
     private void listarProductos() {
         List<String> productos = productoCtrl.listarProductos();
         modelProductos.setRowCount(0);
@@ -222,17 +238,7 @@ public class ProductoViewGUI extends GUIViewBase {
         if (productos.isEmpty()) {
             showWarningMessage("No se encontraron productos.");
         } else {
-            // Parsear cada línea del formato de texto
-            for (String producto : productos) {
-                String[] parts = producto.split("\\|");
-                if (parts.length >= 7) {
-                    Object[] row = new Object[8];
-                    for (int i = 0; i < parts.length && i < 8; i++) {
-                        row[i] = parts[i].trim();
-                    }
-                    modelProductos.addRow(row);
-                }
-            }
+            generarLineaProducto(productos, modelProductos);
         }
     }
 
