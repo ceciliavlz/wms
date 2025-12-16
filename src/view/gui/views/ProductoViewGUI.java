@@ -266,7 +266,7 @@ public class ProductoViewGUI extends GUIViewBase {
             int id = readIntFromField(fieldIdBuscar);
             String respuesta = productoCtrl.buscarProductoPorId(id);
 
-            JPanel buscarPanel = (JPanel) ((JTabbedPane) getContentPane().getComponent(0)).getComponent(2);
+            JPanel buscarPanel = (JPanel) ((JTabbedPane) ((JPanel) getContentPane().getComponent(0)).getComponent(1)).getComponent(2);
             JTextArea textArea = (JTextArea) ((JScrollPane) buscarPanel.getComponent(1)).getViewport().getView();
 
             if (respuesta.equals("")) {
