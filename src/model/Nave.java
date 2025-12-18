@@ -26,5 +26,3 @@ public class Nave {
         return "Nave ID: " + idNave + ", " + racks.size() + " racks.";
     }
 }
-
-

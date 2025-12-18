@@ -53,15 +53,24 @@ public class ProductoDAO {
 
     public static boolean eliminarProductoDelArchivo(int idProducto, Map<Integer, Producto> productosMap) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_PATH, false))) {
+
             for (Producto p : productosMap.values()) {
-                // Solo escribe los productos distintos al que queremos eliminar
                 if (p.getIdProducto() != idProducto) {
-                    writer.println(p.getIdProducto() + "," + p.getDescripcion() + "," + 
-                    p.getUnidadMedida().name() + "," + p.getPesoUnitario() + "," + 
-                    p.getCapacidad());
+                    writer.println(
+                        p.getIdProducto() + "," +
+                        p.getDescripcion() + "," +
+                        p.getUnidadMedida().name() + "," +
+                        p.getPesoUnitario() + "," +
+                        p.getCapacidad() + "," +
+                        p.getStockMinimo() + "," +
+                        p.getGrupo() + "," +
+                        p.getCodigo()
+                    );
                 }
             }
+
             return true;
+
         } catch (IOException e) {
             System.out.println("Error al eliminar el producto del archivo: " + e.getMessage());
             return false;

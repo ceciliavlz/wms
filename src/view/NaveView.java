@@ -2,7 +2,6 @@ package view;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Scanner;
 import controller.NaveController;
 
@@ -77,8 +76,7 @@ public class NaveView extends View{
             } else {
                 super.mostrarMensaje("Rack de ID "+ idRack +" creado con éxito.");
             }
-        } else {
-            return; }
+        }
     }
 
     private void listarRacks(){
@@ -138,4 +136,3 @@ public class NaveView extends View{
         return idNave;
     }
 }
-

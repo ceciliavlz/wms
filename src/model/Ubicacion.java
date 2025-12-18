@@ -6,7 +6,6 @@ public class Ubicacion {
     private int idRack;
     private int fila;
     private int columna;
-    private boolean ubicacionLlena;
     static final float PESO_MAXIMO = 1250;  
 
     public Ubicacion(String codigoUbicacion, int idNave, int idRack, int fila, int columna) {
@@ -15,7 +14,6 @@ public class Ubicacion {
         this.idRack = idRack;
         this.fila = fila;
         this.columna = columna;
-        this.ubicacionLlena = false;
     }
 
     public String getCodigoUbicacion() { return codigoUbicacion; }
@@ -23,13 +21,8 @@ public class Ubicacion {
     public int getFila() { return fila; }
     public int getColumna() { return columna; }
     public static float getPesoMaximo() { return PESO_MAXIMO; }
-    public boolean getUbicacionLlena() {return ubicacionLlena; }
 
     public String toString() {
         return codigoUbicacion;
-    }
-    
-    public void setUbicacionLlena(boolean ubicacionLlena){
-        this.ubicacionLlena = ubicacionLlena;
     }
 }

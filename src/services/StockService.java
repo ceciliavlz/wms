@@ -6,11 +6,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import DAO.ProductoDAO;
+import DAO.StockDAO;
 import model.Producto;
 import model.StockUbicacion;
 import model.Ubicacion;
-import repositories.ProductoDAO;
-import repositories.StockRepository;
 
 public class StockService {
     private Map<Integer, Producto> productosMap = new HashMap<>();
@@ -28,10 +29,25 @@ public class StockService {
     }
 
     //registrar en map
-    public void registrarProducto(Producto p) {
-        p.setIdProducto(getProximoProdId());    //setea id automatico
+    public int registrarProducto(Producto p) {
+        String codigo = "";
+        int id = getProximoProdId();
+
+        p.setIdProducto(id);    //setea id automatico
+        
+        switch (p.getGrupo()) {
+            case "Materia prima": codigo = "MP-0"+id;
+                break;
+            case "Producto final": codigo = "PF-0"+id;
+                break;
+            case "Producto reenvasado": codigo = "PR-0"+id;
+                break;               
+        }
+
+        p.setCodigo(codigo);
         productosMap.put(p.getIdProducto(), p);
         ProductoDAO.guardarProducto(p);
+        return id;
     }
 
     public void registrarUbicacion(Ubicacion u) {
@@ -41,7 +57,7 @@ public class StockService {
     //cargar desde archivo
     public void cargarStockDesdeArchivo(){
         try{
-            List<StockUbicacion> stockCargados = StockRepository.cargarStock();
+            List<StockUbicacion> stockCargados = StockDAO.cargarStock();
 
             for (StockUbicacion s : stockCargados){  //armar maps
                 stockLista.add(s);
@@ -61,7 +77,7 @@ public class StockService {
 
     public void guardarEnArchivo() {
         try {
-            StockRepository.guardarStock(stockLista);
+            StockDAO.guardarStock(stockLista);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -74,7 +90,6 @@ public class StockService {
         }
     }
 
-    //prducto nuevo
     public Producto getProductoPorId(int id){
         return(productosMap.get(id));
     }
@@ -110,11 +125,6 @@ public class StockService {
             stockPorUbicacion
                 .computeIfAbsent(ubicacionCodigo, k -> new ArrayList<>())
                 .add(nuevo);
-            }
-        if (pesoEnUbicacion(ubicacionCodigo) >= Ubicacion.getPesoMaximo()) {
-            ubicacionesMap.get(ubicacionCodigo).setUbicacionLlena(true);
-        } else {
-            ubicacionesMap.get(ubicacionCodigo).setUbicacionLlena(false);
         }
 
         return "OK: Stock agregado correctamente en " + ubicacionCodigo;
@@ -134,11 +144,9 @@ public class StockService {
 
         //actualiza la lista y todos los maps porq es una referencia
         stockExistente.setCantidad(stockExistente.getCantidad() - cantidad);
-        Ubicacion ubi = ubicacionesMap.get(codigoUbicacion);
-        ubi.setUbicacionLlena(pesoEnUbicacion(codigoUbicacion) >= Ubicacion.getPesoMaximo());
 
         return "OK: Se retiraron " + cantidad + " unidades de " + codigoUbicacion;
-}
+    }
 
     public String moverStockEntreUbicaciones(int idProducto, String codigoUbiOrigen, String codigoUbiDestino, int cantidad) {
         String resultRetirarStock = retirarStockDeUbicacion(idProducto, codigoUbiOrigen, cantidad);
@@ -202,10 +210,9 @@ public class StockService {
     private List<String> getUbicDisponiblesSinOrden(int idRack) {
         List<String> ubiDisponibles = new ArrayList<>();
         
-        for (String codigo : ubicacionesMap.keySet()) {
-            Ubicacion ubicacion = ubicacionesMap.get(codigo);
-            if (!ubicacion.getUbicacionLlena() && ubicacion.getIdRack()==idRack){
-                ubiDisponibles.add(codigo);
+        for (Ubicacion u : ubicacionesMap.values()) {
+            if (u.getIdRack() == idRack && !esUbicacionLlena(u.getCodigoUbicacion())) {
+                ubiDisponibles.add(u.getCodigoUbicacion());
             }
         }
         return ubiDisponibles;
@@ -246,7 +253,20 @@ public class StockService {
         }
         return pesos;
     }
-
+    
+    public Producto productoPorDescripcion(String descripcion) {
+        for (Producto p : productosMap.values()) {
+            if (p.getDescripcion().equalsIgnoreCase(descripcion)) {
+                return p;
+            }
+        }
+        return null; // No encontrado
+    }
+    
+    public boolean esUbicacionLlena(String codigoUbicacion) {
+        return pesoEnUbicacion(codigoUbicacion) >= Ubicacion.getPesoMaximo();
+    }
+    
     //consultas privadas
     private int getProximoProdId() {
         int idAnterior = 0;

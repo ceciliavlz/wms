@@ -26,9 +26,10 @@ public class NaveController {
 
     public List<String> listarNaves() {
         List<String> naves = new ArrayList<>();
-
+        
         for (Nave nave : naveService.getTodasLasNaves()) {
-            naves.add(nave.toString());
+            String respuesta = "Nave ID ";
+            naves.add(respuesta + String.valueOf(nave.getIdNave()));
         }
         return naves;
     }
@@ -57,13 +58,37 @@ public class NaveController {
     public List<String> listarUbicacionesRack(int idRack){
         return stockService.listarUbicacionesDisponiblesRack(idRack);
     }
+    
 
     public List<String> calcularPesosRack(int idRack){
         List<String> resultado = new ArrayList<String>();
 
         for (Map.Entry<String,Double> peso : stockService.pesosDeRack(idRack).entrySet()){
-            resultado.add(peso.getKey() +": "+peso.getValue() +"kg.");
+            resultado.add(peso.getKey() +": "+peso.getValue() +"kg");
         }
         return resultado;
+    }
+    
+    public String pesoTotalRack(int idRack){
+        float pesoTot = 0;
+
+        for (Map.Entry<String,Double> peso : stockService.pesosDeRack(idRack).entrySet()){
+            pesoTot += peso.getValue();
+        }
+
+        return pesoTot +" kg";
+    }
+    
+    public List<Integer> listarTodosLosRacks(){
+        List<Integer> racksIds = naveService.getTodosLosRacks();
+        return racksIds;
+    }
+    
+    public int naveDeRack(int idRack){      
+        return naveService.getIdNavePorRack(idRack);
+    }
+    
+    public boolean ubicacionLlena(String codigoUbicacion){
+        return stockService.esUbicacionLlena(codigoUbicacion);
     }
 }
