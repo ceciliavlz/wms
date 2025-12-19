@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package view;
 
 import controller.MovimientoController;
@@ -10,10 +6,8 @@ import controller.ProductoController;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import view.JPanels.Principal;
-import javax.swing.UIManager;
 import view.JPanels.Movimientos;
 import view.JPanels.Naves;
 import view.JPanels.Productos;
@@ -48,7 +42,7 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         content = new JPanel(new BorderLayout());
         content.setBounds(230, 100, 670, 500); // misma posición que en el diseñador
 
-        bg.add(content, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 100, 670, 500));
+        bg.add(content, BorderLayout.CENTER);
         btnPrincipal.setBackground(new Color(0,75,75));
         botonActual = btnPrincipal;
                 
@@ -87,7 +81,7 @@ public class PrincipalJFrame extends javax.swing.JFrame {
     }
     
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
         bg = new javax.swing.JPanel();
@@ -115,7 +109,6 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         bg.setBackground(new java.awt.Color(232, 232, 232));
         bg.setMinimumSize(new java.awt.Dimension(900, 600));
         bg.setPreferredSize(new java.awt.Dimension(900, 600));
-        bg.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         menu.setBackground(new java.awt.Color(0, 51, 51));
 
@@ -256,50 +249,47 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         menu.setLayout(menuLayout);
         menuLayout.setHorizontalGroup(
             menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnPrincipal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnNaves, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnTransformacion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnMovimientos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnNaves, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnMovimientos, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnTransformacion, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnTrazabilidad, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnConsultas, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(menuLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addGroup(menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(menuLayout.createSequentialGroup()
                         .addComponent(logo, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(30, Short.MAX_VALUE))
-            .addComponent(btnProductos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnTrazabilidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnConsultas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(6, 6, 6)
+                        .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         menuLayout.setVerticalGroup(
             menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuLayout.createSequentialGroup()
+            .addGroup(menuLayout.createSequentialGroup()
                 .addGap(40, 40, 40)
                 .addGroup(menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(logo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(6, 6, 6)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
                 .addComponent(btnPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(6, 6, 6)
                 .addComponent(btnNaves, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(6, 6, 6)
                 .addComponent(btnProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(6, 6, 6)
                 .addComponent(btnMovimientos, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(6, 6, 6)
                 .addComponent(btnTransformacion, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(6, 6, 6)
                 .addComponent(btnTrazabilidad, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(6, 6, 6)
                 .addComponent(btnConsultas, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(76, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        bg.add(menu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 230, 600));
 
         header.setBackground(new java.awt.Color(255, 255, 255));
         header.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -357,9 +347,9 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         headerLayout.setHorizontalGroup(
             headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, headerLayout.createSequentialGroup()
-                .addGap(255, 255, 255)
-                .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 534, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
+                .addGap(35, 35, 35)
+                .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                 .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         headerLayout.setVerticalGroup(
@@ -370,7 +360,22 @@ public class PrincipalJFrame extends javax.swing.JFrame {
             .addComponent(title, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        bg.add(header, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 900, 100));
+        javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
+        bg.setLayout(bgLayout);
+        bgLayout.setHorizontalGroup(
+            bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bgLayout.createSequentialGroup()
+                .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        bgLayout.setVerticalGroup(
+            bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bgLayout.createSequentialGroup()
+                .addComponent(header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -386,70 +391,70 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>                        
 
-    private void headerMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_headerMousePressed
+    private void headerMousePressed(java.awt.event.MouseEvent evt) {                                    
         xMouse = evt.getX();
         yMouse = evt.getY();
-    }//GEN-LAST:event_headerMousePressed
+    }                                   
 
-    private void headerMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_headerMouseDragged
+    private void headerMouseDragged(java.awt.event.MouseEvent evt) {                                    
         int x = evt.getXOnScreen();
         int y = evt.getYOnScreen();
         this.setLocation(x - xMouse, y - yMouse);
-    }//GEN-LAST:event_headerMouseDragged
+    }                                   
 
-    private void btnExitXMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitXMouseExited
+    private void btnExitXMouseExited(java.awt.event.MouseEvent evt) {                                     
         btnExit.setBackground(Color.WHITE);
-    }//GEN-LAST:event_btnExitXMouseExited
+    }                                    
 
-    private void btnExitXMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitXMouseEntered
+    private void btnExitXMouseEntered(java.awt.event.MouseEvent evt) {                                      
         btnExit.setBackground(new Color(255,153,153));
-    }//GEN-LAST:event_btnExitXMouseEntered
+    }                                     
 
-    private void btnExitXMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitXMouseClicked
+    private void btnExitXMouseClicked(java.awt.event.MouseEvent evt) {                                      
         System.exit(0);
-    }//GEN-LAST:event_btnExitXMouseClicked
+    }                                     
 
-    private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
+    private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {                                             
         mostrarJPanel(new Productos(this, productoCtrl));
         seleccionBoton(btnProductos);
         title.setText("MENÚ PRODUCTOS");
-    }//GEN-LAST:event_btnProductosActionPerformed
+    }                                            
 
-    private void btnConsultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultasActionPerformed
+    private void btnConsultasActionPerformed(java.awt.event.ActionEvent evt) {                                             
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnConsultasActionPerformed
+    }                                            
 
-    private void btnMovimientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMovimientosActionPerformed
+    private void btnMovimientosActionPerformed(java.awt.event.ActionEvent evt) {                                               
         //menuMovimientosPanel = new Movimientos(this, movimientoCtrl, productoCtrl, naveCtrl);
         mostrarJPanel(menuMovimientosPanel);
         title.setText("MENÚ ORDENES DE MOVIMIENTO");
         seleccionBoton(btnMovimientos);
-    }//GEN-LAST:event_btnMovimientosActionPerformed
+    }                                              
 
-    private void btnNavesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNavesActionPerformed
+    private void btnNavesActionPerformed(java.awt.event.ActionEvent evt) {                                         
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnNavesActionPerformed
+    }                                        
 
-    private void btnPrincipalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrincipalActionPerformed
+    private void btnPrincipalActionPerformed(java.awt.event.ActionEvent evt) {                                             
         mostrarJPanel(new Principal());
         title.setText("MENÚ PRINCIPAL");
         seleccionBoton(btnPrincipal);
-    }//GEN-LAST:event_btnPrincipalActionPerformed
+    }                                            
 
-    private void btnNavesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnNavesMouseClicked
+    private void btnNavesMouseClicked(java.awt.event.MouseEvent evt) {                                      
         mostrarJPanel(new Naves(this, naveCtrl));
         title.setText("MENÚ NAVES");
         seleccionBoton(btnNaves);
-    }//GEN-LAST:event_btnNavesMouseClicked
+    }                                     
 
-    private void btnMovimientosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMovimientosMouseClicked
+    private void btnMovimientosMouseClicked(java.awt.event.MouseEvent evt) {                                            
 
-    }//GEN-LAST:event_btnMovimientosMouseClicked
+    }                                           
 
     
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     private javax.swing.JPanel bg;
     private javax.swing.JButton btnConsultas;
     private javax.swing.JPanel btnExit;
@@ -466,6 +471,5 @@ public class PrincipalJFrame extends javax.swing.JFrame {
     private javax.swing.JPanel menu;
     private javax.swing.JLabel name;
     private javax.swing.JLabel title;
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration                   
 }
-
