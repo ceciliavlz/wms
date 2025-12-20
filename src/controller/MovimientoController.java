@@ -1,0 +1,84 @@
+package controller;
+import java.time.LocalDate;
+
+import model.OrdenMovimiento;
+import model.TipoMovimiento;
+import services.MovimientoService;
+
+public class MovimientoController {
+    private final MovimientoService movService;
+    private static MovimientoController instance;
+    
+    private MovimientoController(MovimientoService movService) {
+        this.movService = movService;
+    }
+    
+    public static MovimientoController getInstance() {
+        if (instance == null) {
+            instance = new MovimientoController(MovimientoService.getInstance());
+        }
+        
+        return instance;
+    }
+
+    public String generarOrdenIngreso(int productoID, String ubicacion, int cantidad) {
+        OrdenMovimiento ordenIngreso = new OrdenMovimiento(
+            TipoMovimiento.INGRESO,
+            0, //temporario, se asigna en procesarOrdenMovimiento
+            cantidad,
+            productoID,
+            LocalDate.now(),
+            ubicacion
+        );
+            return movService.procesarOrdenMovimiento(ordenIngreso);
+    }
+
+    public String generarOrdenEgreso(int productoID, String ubicacion, int cantidad) {
+        OrdenMovimiento ordenEgreso = new OrdenMovimiento(
+            TipoMovimiento.EGRESO,
+            0, //temporario, se asigna en procesarOrdenMovimiento
+            cantidad,
+            productoID,
+            LocalDate.now(),
+            ubicacion
+        );
+        return movService.procesarOrdenMovimiento(ordenEgreso);
+    }
+
+    public String generarOrdenMovInterno(int productoID, String ubicacionOrigen, String ubicacionDestino, int cantidad){
+        OrdenMovimiento ordenInterno = new OrdenMovimiento(
+            TipoMovimiento.INTERNO,
+            0,  //temporario, se asigna en procesarOrdenMovimiento
+            cantidad,
+            productoID,
+            LocalDate.now(),
+            ubicacionOrigen,
+            ubicacionDestino
+        );
+        return movService.procesarOrdenMovimiento(ordenInterno);
+    }
+    
+    public String generarOrdenIngresoFechaIngresada(int productoID, String ubicacion, int cantidad, LocalDate fecha) {
+        OrdenMovimiento ordenIngreso = new OrdenMovimiento(
+            TipoMovimiento.INGRESO,
+            0, //temporario, se asigna en procesarOrdenMovimiento
+            cantidad,
+            productoID,
+            fecha,
+            ubicacion
+        );
+            return movService.procesarOrdenMovimiento(ordenIngreso);
+    }
+    
+    public String generarOrdenEgresoFechaIngresada(int productoID, String ubicacion, int cantidad, LocalDate fecha) {
+        OrdenMovimiento ordenEgreso = new OrdenMovimiento(
+            TipoMovimiento.EGRESO,
+            0, //temporario, se asigna en procesarOrdenMovimiento
+            cantidad,
+            productoID,
+            fecha,
+            ubicacion
+        );
+        return movService.procesarOrdenMovimiento(ordenEgreso);
+    }
+}
