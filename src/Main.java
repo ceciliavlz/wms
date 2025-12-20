@@ -2,13 +2,6 @@ import java.util.Scanner;
 
 import services.StockService;
 import services.TransformacionService;
-import view.ConsultasView;
-import view.HistorialView;
-import view.NaveView;
-import view.OrdenesMovView;
-import view.ProductoView;
-import view.TransformacionView;
-import view.View;
 import services.MovimientoService;
 import services.NaveService;
 import services.RackService;
@@ -18,9 +11,14 @@ import controller.MovimientoController;
 import controller.NaveController;
 import controller.ProductoController;
 import controller.TransformacionController;
+import view.cli.ConsultasView;
+import view.cli.HistorialView;
+import view.cli.NaveView;
+import view.cli.OrdenesMovView;
+import view.cli.ProductoView;
+import view.cli.TransformacionView;
+import view.cli.View;
 import view.gui.Dashboard;
-import view.gui.frames.PrincipalJFrame;
-
 
 public class Main {
 

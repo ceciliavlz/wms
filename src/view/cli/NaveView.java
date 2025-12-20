@@ -1,4 +1,4 @@
-package view;
+package view.cli;
 
 import java.util.Collections;
 import java.util.List;

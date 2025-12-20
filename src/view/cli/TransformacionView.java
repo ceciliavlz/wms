@@ -1,4 +1,4 @@
-package view;
+package view.cli;
 
 import java.time.LocalDate;
 import java.util.List;
