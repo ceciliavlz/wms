@@ -11,10 +11,19 @@ import services.TransformacionService;
 public class TransformacionController {
     private final TransformacionService transfService;
     private final StockService stockService;
-
-    public TransformacionController(TransformacionService transfService, StockService stockService) {
+    private static TransformacionController instance;
+    
+    private TransformacionController(TransformacionService transfService, StockService stockService) {
         this.transfService = transfService;
         this.stockService = stockService;
+    }
+    
+    public static TransformacionController getInstance() {
+        if (instance == null) {
+            instance = new TransformacionController(TransformacionService.getInstance() ,StockService.getInstance());
+        }
+        
+        return instance;
     }
 
     public String procesarTransformacion(int idProductoEntrada, String ubicacionProdEntrada, int cantidadEntrada,
@@ -62,3 +71,4 @@ public class TransformacionController {
         return transfService.getHistorialTransformacion();
     }
 }
+

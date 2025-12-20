@@ -11,9 +11,18 @@ import services.StockService;
 
 public class ProductoController {
     private final StockService stockService;
-
-    public ProductoController(StockService stockService) {
+    private static ProductoController instance;
+    
+    private ProductoController(StockService stockService) { 
         this.stockService = stockService;
+    }
+    
+    public static ProductoController getInstance() {
+        if (instance == null) {
+            instance = new ProductoController(StockService.getInstance());
+        }
+        
+        return instance;
     }
 
     public String agregarProducto(String descripcion, String unidadMedida, double peso, double capacidad, int stockMin, String grupo) {

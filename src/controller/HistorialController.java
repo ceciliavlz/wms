@@ -12,12 +12,21 @@ import services.TransformacionService;
 public class HistorialController {
     private final MovimientoService movService;
     private final TransformacionService transfService;
+    private static HistorialController instance;
 
-    public HistorialController (MovimientoService movService, TransformacionService transfService){
+    private HistorialController (MovimientoService movService, TransformacionService transfService){
         this.movService = movService;
         this.transfService = transfService;
     }
-
+    
+    public static HistorialController getInstance() {
+        if (instance == null) {
+            instance = new HistorialController(MovimientoService.getInstance(), TransformacionService.getInstance());
+        }
+        
+        return instance;
+    }
+    
     public List<String> verHistorialProducto(int id) {
         List<RegistroHistorial> registros = new ArrayList<>();
 
@@ -93,3 +102,5 @@ public class HistorialController {
     }
 
 }
+
+

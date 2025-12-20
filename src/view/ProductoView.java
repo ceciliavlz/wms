@@ -5,11 +5,10 @@ import java.util.Scanner;
 import controller.ProductoController;
 
 public class ProductoView extends View{
-    private final ProductoController productoCtrl;
+    private final ProductoController productoCtrl = ProductoController.getInstance();
     Scanner sc;
 
-    public ProductoView(ProductoController productoCtrl, Scanner sc){
-        this.productoCtrl = productoCtrl;
+    public ProductoView(Scanner sc){
         this.sc = sc;
     }
 

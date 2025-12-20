@@ -1,6 +1,7 @@
 package services;
 
 import java.util.*;
+
 import DAO.NaveDAO;
 import model.Nave;
 import model.Rack;
@@ -8,10 +9,19 @@ import model.Rack;
 public class NaveService {
     private Map<Integer, Nave> navesMap = new HashMap<>();
     private RackService rackService;
+    private static NaveService instance;
 
-    public NaveService(RackService rackService) {
+    private NaveService(RackService rackService) {
         this.rackService = rackService;
         cargarDesdeArchivos();
+    }
+    
+    public static NaveService getInstance() {
+        if (instance == null) {
+            instance = new NaveService(RackService.getInstance());
+        }
+        
+        return instance;
     }
 
     public Nave crearNave() {

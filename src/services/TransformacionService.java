@@ -11,10 +11,19 @@ import model.Producto;
 public class TransformacionService {
     private StockService stockService;
     private List<OrdenTransformacion> historialTransformacion = new ArrayList<>();
+    private static TransformacionService instance;
     
-    public TransformacionService(StockService stockService) {
+    private TransformacionService(StockService stockService) {
         this.stockService = stockService;
         cargarHistorial();
+    }
+    
+    public static TransformacionService getInstance() {
+        if (instance == null) {
+            instance = new TransformacionService(StockService.getInstance());
+        }
+        
+        return instance;
     }
 
     public String procesarOrdenTransformacion(OrdenTransformacion orden, Producto datosProdTransformado) {

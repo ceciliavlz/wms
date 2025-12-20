@@ -16,14 +16,21 @@ import model.Ubicacion;
 public class StockService {
     private Map<Integer, Producto> productosMap = new HashMap<>();
     private Map<String, Ubicacion> ubicacionesMap = new HashMap<>();
-
     private Map<Integer, List<StockUbicacion>> stockPorProducto = new HashMap<>();
     private Map<String, List<StockUbicacion>> stockPorUbicacion = new HashMap<>();
-    
     private List<StockUbicacion> stockLista = new ArrayList<>();
-
-
-    public StockService(){
+    private static StockService instance; 
+    
+    
+    public static StockService getInstance() {
+        if (instance == null) {
+            instance = new StockService();
+        }
+        
+        return instance;
+    }
+    
+    private StockService(){
         cargarStockDesdeArchivo();
         cargarProductosArchivo();
     }

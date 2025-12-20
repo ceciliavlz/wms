@@ -8,9 +8,18 @@ import services.StockService;
 
 public class ConsultasController {
     private final StockService stockService;
-
-    public ConsultasController(StockService stockService) {
+    private static ConsultasController instance;
+    
+    private ConsultasController(StockService stockService) {
         this.stockService = stockService;
+    }
+    
+    public static ConsultasController getInstance() {
+        if (instance == null) {
+            instance = new ConsultasController(StockService.getInstance());
+        }
+        
+        return instance;
     }
 
     public int stockDeUnProducto(int idProd) {

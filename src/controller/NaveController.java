@@ -13,10 +13,19 @@ import services.StockService;
 public class NaveController {
     private final NaveService naveService;
     private final StockService stockService;
-
-    public NaveController(NaveService naveService, StockService stockService){
+    private static NaveController instance;
+    
+    private NaveController(NaveService naveService, StockService stockService){
         this.naveService = naveService;
         this.stockService = stockService;
+    }
+    
+    public static NaveController getInstance() {
+        if (instance == null) {
+            instance = new NaveController(NaveService.getInstance(), StockService.getInstance());
+        }
+        
+        return instance;
     }
 
     public int crearNave() {  
@@ -36,7 +45,8 @@ public class NaveController {
 
     public int crearRack(int idNave){
         if (naveService.getNavePorId(idNave) == null) {
-            return 0; }
+            return 0; 
+        }
         else {
             Rack nuevo = naveService.crearRackEnNave(idNave);
             return nuevo.getIdRack();

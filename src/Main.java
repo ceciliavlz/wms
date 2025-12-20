@@ -18,67 +18,63 @@ import controller.MovimientoController;
 import controller.NaveController;
 import controller.ProductoController;
 import controller.TransformacionController;
-import view.Dashboard;
+import view.gui.Dashboard;
+import view.gui.frames.PrincipalJFrame;
 
 
 public class Main {
 
-    // Servicios compartidos entre consola y GUI
-    private static StockService stockService;
-    private static RackService rackService;
-    private static NaveService naveService;
-    private static MovimientoService movService;
-    private static TransformacionService transfService;
-
     public static void main(String[] args) {
-
-        // Instancias únicas
-        stockService = new StockService();
-        rackService = new RackService(stockService);
-        naveService = new NaveService(rackService);
-        movService = new MovimientoService(stockService);
-        transfService = new TransformacionService(stockService);
-
-        // 2) Registrar shutdown hook
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            stockService.guardarEnArchivo();
-            movService.guardarHistorial();
-            System.out.println("Datos guardados correctamente al salir.");
-        }));
-
-        // 3) Elegir modo
+        iniciarServicios();
+        iniciarControladores();
+        iniciarShutdownHook();
+        iniciarVistas(args);
+    }
+    
+    private static void iniciarServicios(){
+        StockService.getInstance();
+        RackService.getInstance();
+        NaveService.getInstance();
+        MovimientoService.getInstance();
+        TransformacionService.getInstance();
+    }
+    
+    private static void iniciarControladores(){
+        ProductoController.getInstance();
+        HistorialController.getInstance();
+        MovimientoController.getInstance();
+        NaveController.getInstance();
+        ConsultasController.getInstance();
+        TransformacionController.getInstance();
+    }
+    
+    private static void iniciarVistas(String[] args) {
         if (args.length > 0 && args[0].equals("consola")) {
             iniciarModoConsola();
         } else {
-            iniciarModoGUI();
+            Dashboard.iniciarModoGUI();
         }
     }
-
-    private static void iniciarModoGUI() {
-        new Dashboard(
-            stockService,
-            rackService,
-            naveService,
-            movService,
-            transfService);
+    
+    private static void iniciarShutdownHook(){
+        Runtime.getRuntime().addShutdownHook(new Thread(
+                () -> {
+                    StockService.getInstance().guardarEnArchivo();
+                    MovimientoService.getInstance().guardarHistorial();
+                    System.out.println("Datos guardados correctamente al salir.");
+                }
+        ));
     }
 
     private static void iniciarModoConsola() {
         Scanner scanner = new Scanner(System.in);
 
-        ProductoController productoCtrl = new ProductoController(stockService);
-        MovimientoController movimientoCtrl = new MovimientoController(movService);
-        NaveController naveCtrl = new NaveController(naveService, stockService);
-        ConsultasController consultasCtrl = new ConsultasController(stockService);
-        TransformacionController transfController = new TransformacionController(transfService, stockService);
-        HistorialController historialCtrl = new HistorialController(movService, transfService);
-
-        ProductoView productoView = new ProductoView(productoCtrl, scanner);
-        OrdenesMovView ordenesMovView = new OrdenesMovView(movimientoCtrl, productoCtrl, scanner);
-        NaveView naveView = new NaveView(naveCtrl, scanner);
-        ConsultasView consultasView = new ConsultasView(consultasCtrl, productoCtrl, scanner);
-        TransformacionView transfView = new TransformacionView(transfController, scanner);
-        HistorialView historialView = new HistorialView(historialCtrl, scanner);
+        ProductoView productoView = new ProductoView(scanner);
+        OrdenesMovView ordenesMovView = new OrdenesMovView(MovimientoController.getInstance(), ProductoController.getInstance(), scanner);
+        NaveView naveView = new NaveView(NaveController.getInstance(), scanner);
+        ConsultasView consultasView = new ConsultasView(ConsultasController.getInstance(), ProductoController.getInstance(), scanner);
+        TransformacionView transfView = new TransformacionView(TransformacionController.getInstance(), scanner);
+        HistorialView historialView = new HistorialView(HistorialController.getInstance(), scanner);
 
         boolean salir = false;
 

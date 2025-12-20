@@ -12,9 +12,18 @@ import model.Ubicacion;
 public class RackService {
     private Map<Integer, Rack> racksMap = new HashMap<>();
     private StockService stockService;
+    private static RackService instance;
 
-    public RackService(StockService stockService) {
+    private RackService(StockService stockService) {
         this.stockService = stockService;
+    }
+    
+    public static RackService getInstance() {
+        if (instance == null) {
+            instance = new RackService(StockService.getInstance());
+        }
+        
+        return instance;
     }
 
     public Rack crearRack(int idNave) {

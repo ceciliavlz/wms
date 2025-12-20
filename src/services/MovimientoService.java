@@ -10,10 +10,19 @@ import model.OrdenMovimiento;
 public class MovimientoService {
     private StockService stockService;
     private List<OrdenMovimiento> historialMovimientos = new ArrayList<>();
-
-    public MovimientoService(StockService stockService) {
+    private static MovimientoService instance;
+    
+    private MovimientoService(StockService stockService) {
         this.stockService = stockService;
         cargarHistorial();
+    }
+    
+    public static MovimientoService getInstance() {
+        if (instance == null) {
+            instance = new MovimientoService(StockService.getInstance());
+        }
+        
+        return instance;
     }
 
     public String procesarOrdenMovimiento(OrdenMovimiento orden) {
