@@ -1,12 +1,11 @@
 package view.gui.views;
 
-import view.gui.GUIViewBase;
 import controller.NaveController;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import view.gui.GUIViewBase;
 
 public class NaveViewGUI extends GUIViewBase {
     private final NaveController naveCtrl;
@@ -264,11 +263,11 @@ public class NaveViewGUI extends GUIViewBase {
             int idRack = readIntFromField(fieldIdRack);
             List<String> ubicaciones = naveCtrl.listarUbicacionesRack(idRack);
             
-            JPanel ubicacionesPanel = (JPanel) ((JTabbedPane) getContentPane().getComponent(0)).getComponent(2);
+            JPanel ubicacionesPanel = (JPanel) ((JTabbedPane) ((JPanel) getContentPane().getComponent(0)).getComponent(1)).getComponent(2);
             JTextArea textArea = (JTextArea) ((JScrollPane) ubicacionesPanel.getComponent(1)).getViewport().getView();
             
             if (ubicaciones.isEmpty()) {
-                textArea.setText("No hay rack con esa ID");
+                showErrorMessage("No hay rack con esa ID");
             } else {
                 StringBuilder sb = new StringBuilder();
                 sb.append("NAVE-RACK-FILA-COL:\n");
