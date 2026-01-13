@@ -2,6 +2,7 @@ package view.gui.views;
 
 import controller.NaveController;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -11,8 +12,10 @@ public class NaveViewGUI extends GUIViewBase {
     private final NaveController naveCtrl;
     private JTable tableNaves;
     private JTable tableRacks;
+    private JTable tableUbicaciones;
     private DefaultTableModel modelNaves;
     private DefaultTableModel modelRacks;
+    private DefaultTableModel modelUbicaciones;
     private JTextField fieldIdNave;
     private JTextField fieldIdRack;
 
@@ -171,19 +174,23 @@ public class NaveViewGUI extends GUIViewBase {
         btnPesoRack.addActionListener(e -> mostrarPesoRack());
         controlPanel.add(btnPesoRack);
 
-        // Área de texto para resultados
-        JTextArea textArea = new JTextArea(15, 50);
-        textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-        textArea.setEditable(false);
-        textArea.setBorder(BorderFactory.createTitledBorder("Resultados"));
-        JScrollPane scrollPane = new JScrollPane(textArea);
+        // Tabla para resultados
+        String[] columnNames = {"Nave", "Rack", "Fila", "Columna"};
+        modelUbicaciones = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tableUbicaciones = new JTable(modelUbicaciones);
+        tableUbicaciones.setFont(FONT_NORMAL);
+        tableUbicaciones.setRowHeight(25);
+        tableUbicaciones.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        JScrollPane scrollPane = new JScrollPane(tableUbicaciones);
 
         // Guardar referencia al textArea para usarla en los métodos
         panel.add(controlPanel, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
-
-        // Guardar referencia para uso en métodos
-        panel.putClientProperty("textArea", textArea);
 
         return panel;
     }
@@ -259,24 +266,21 @@ public class NaveViewGUI extends GUIViewBase {
 
     // Lista las ubicaciones
     private void listarUbicaciones() {
+        modelUbicaciones.setRowCount(0);
         try {
             int idRack = readIntFromField(fieldIdRack);
             List<String> ubicaciones = naveCtrl.listarUbicacionesRack(idRack);
-            
-            JPanel ubicacionesPanel = (JPanel) ((JTabbedPane) ((JPanel) getContentPane().getComponent(0)).getComponent(1)).getComponent(2);
-            JTextArea textArea = (JTextArea) ((JScrollPane) ubicacionesPanel.getComponent(1)).getViewport().getView();
-            
+            List<String[]> ubicacionesParaTabla = new ArrayList<>();
+            for (String ubicacion : ubicaciones) {
+                ubicacionesParaTabla.add(ubicacion.split("-"));
+            }
+
             if (ubicaciones.isEmpty()) {
                 showErrorMessage("No hay rack con esa ID");
             } else {
-                StringBuilder sb = new StringBuilder();
-                sb.append("NAVE-RACK-FILA-COL:\n");
-                sb.append("N-R-F-C\n");
-                sb.append("--------------------\n");
-                for (String u : ubicaciones) {
-                    sb.append(u).append("\n");
+                for (String[] ubic : ubicacionesParaTabla) {
+                    modelUbicaciones.addRow(ubic);
                 }
-                textArea.setText(sb.toString());
             }
         } catch (NumberFormatException e) {
             showErrorMessage("Por favor ingrese un ID de rack válido.");
