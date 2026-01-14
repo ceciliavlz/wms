@@ -1,12 +1,11 @@
 package view.gui.views;
 
-import view.gui.GUIViewBase;
 import controller.HistorialController;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import view.gui.GUIViewBase;
 
 public class HistorialViewGUI extends GUIViewBase {
     private final HistorialController historialCtrl;
@@ -149,7 +148,7 @@ public class HistorialViewGUI extends GUIViewBase {
     private void cargarHistorialTransformaciones() {
         List<String> transformaciones = historialCtrl.verHistorialTransformaciones();
         
-        JTabbedPane tabbedPane = (JTabbedPane) getContentPane().getComponent(0);
+        JTabbedPane tabbedPane = (JTabbedPane) ((JPanel) getContentPane().getComponent(0)).getComponent(1);
         JPanel panel = (JPanel) tabbedPane.getComponent(1);
         DefaultTableModel model = (DefaultTableModel) panel.getClientProperty("tableModel");
         
