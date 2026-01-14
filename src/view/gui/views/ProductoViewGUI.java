@@ -304,6 +304,7 @@ public class ProductoViewGUI extends GUIViewBase {
     }
 
     private void eliminarProducto() {
+        modelEliminarProducto.setRowCount(0);
         try {
             int id = readIntFromField(fieldIdEliminar);
             String producto = productoCtrl.buscarProductoPorId(id);
