@@ -261,7 +261,7 @@ public class ConsultasViewGUI extends GUIViewBase {
     private void consultarStockAgrupadoUbicacion() {
         List<String> respuesta = consultasCtrl.agrupadoPorUbicacion();
         
-        JTabbedPane tabbedPane = (JTabbedPane) getContentPane().getComponent(0);
+        JTabbedPane tabbedPane = (JTabbedPane) ((JPanel) getContentPane().getComponent(0)).getComponent(1);
         JPanel panel = (JPanel) tabbedPane.getComponent(3);
         DefaultTableModel model = (DefaultTableModel) panel.getClientProperty("tableModel");
         
