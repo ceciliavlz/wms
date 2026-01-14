@@ -273,6 +273,14 @@ public class NaveViewGUI extends GUIViewBase {
     // Lista las ubicaciones
     private void listarUbicaciones() {
         modelUbicaciones.setRowCount(0);
+        String[] columnNames = {"Nave", "Rack", "Fila", "Columna"};
+        modelUbicaciones = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tableUbicaciones.setModel(modelUbicaciones);
         try {
             int idRack = readIntFromField(fieldIdRack);
             List<String> ubicaciones = naveCtrl.listarUbicacionesRack(idRack);
@@ -299,18 +307,21 @@ public class NaveViewGUI extends GUIViewBase {
             int idRack = readIntFromField(fieldIdRack);
             List<String> pesos = naveCtrl.calcularPesosRack(idRack);
             
-            JPanel ubicacionesPanel = (JPanel) ((JTabbedPane) getContentPane().getComponent(0)).getComponent(2);
-            JTextArea textArea = (JTextArea) ((JScrollPane) ubicacionesPanel.getComponent(1)).getViewport().getView();
-            
             if (pesos.isEmpty()) {
-                textArea.setText("No se encontró un rack con ese ID");
+                showWarningMessage("No se encontró un rack con ese ID");
             } else {
-                StringBuilder sb = new StringBuilder();
-                sb.append("==== Peso de ubicaciones rack ").append(idRack).append(" ====\n");
-                for (int i = pesos.size() - 1; i >= 0; i--) {
-                    sb.append(pesos.get(i)).append("\n");
+                modelUbicaciones.setRowCount(0);
+                String[] columnNames = {"N-R-F-C", "Peso"};
+                modelUbicaciones = new DefaultTableModel(columnNames, 0) {
+                    @Override
+                    public boolean isCellEditable(int row, int column) {
+                        return false;
+                    }
+                };
+                tableUbicaciones.setModel(modelUbicaciones);
+                for (String peso : pesos) {
+                    modelUbicaciones.addRow(peso.split(":"));
                 }
-                textArea.setText(sb.toString());
             }
         } catch (NumberFormatException e) {
             showErrorMessage("Por favor ingrese un ID de rack válido.");
