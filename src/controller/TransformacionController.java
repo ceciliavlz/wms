@@ -5,20 +5,29 @@ import java.util.List;
 
 import model.OrdenTransformacion;
 import model.Producto;
+import services.PermissionService;
 import services.StockService;
 import services.TransformacionService;
 
 public class TransformacionController {
     private final TransformacionService transfService;
     private final StockService stockService;
+    private PermissionService permissionService;
 
     public TransformacionController(TransformacionService transfService, StockService stockService) {
         this.transfService = transfService;
         this.stockService = stockService;
     }
 
+    public void setPermissionService(PermissionService permissionService) {
+        this.permissionService = permissionService;
+    }
+
     public String procesarTransformacion(int idProductoEntrada, String ubicacionProdEntrada, int cantidadEntrada,
             Producto productoTransformadoTemporal, String ubicacionSalida, LocalDate fecha) {
+        if (permissionService != null && !permissionService.canWrite()) {
+            return "ERROR: No tiene permisos para crear transformaciones.";
+        }
         
         Producto prodEntrada = stockService.getProductoPorId(idProductoEntrada);
        

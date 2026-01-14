@@ -10,10 +10,15 @@ import model.OrdenMovimiento;
 public class MovimientoService {
     private StockService stockService;
     private List<OrdenMovimiento> historialMovimientos = new ArrayList<>();
+    private String usuarioActual = null;
 
     public MovimientoService(StockService stockService) {
         this.stockService = stockService;
         cargarHistorial();
+    }
+
+    public void setUsuarioActual(String username) {
+        this.usuarioActual = username;
     }
 
     public String procesarOrdenMovimiento(OrdenMovimiento orden) {
@@ -42,6 +47,10 @@ public class MovimientoService {
         }
         System.out.println(resultado.startsWith("OK"));
         if (resultado.startsWith("OK:")) {
+            // Asignar usuario responsable para auditoría
+            if (usuarioActual != null) {
+                orden.setUsuarioResponsable(usuarioActual);
+            }
             historialMovimientos.add(orden);
         }
         return resultado;
@@ -66,7 +75,7 @@ public class MovimientoService {
         if (historialMovimientos.isEmpty()){
             return 1;
         } else {
-            return historialMovimientos.getLast().getIdOrdenMov() + 1;
+            return historialMovimientos.get(historialMovimientos.size() - 1).getIdOrdenMov() + 1;
         }     
     }
 

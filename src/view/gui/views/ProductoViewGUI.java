@@ -22,6 +22,8 @@ public class ProductoViewGUI extends GUIViewBase {
     private JComboBox<String> comboGrupo;
     private JTextField fieldIdBuscar;
     private JTextField fieldIdEliminar;
+    private JTextArea textAreaBuscar;
+    private JTextArea textAreaEliminar;
 
     public ProductoViewGUI(ProductoController productoCtrl) {
         super("Gestión de Productos");
@@ -176,15 +178,14 @@ public class ProductoViewGUI extends GUIViewBase {
         btnBuscar.addActionListener(e -> buscarProducto());
         controlPanel.add(btnBuscar);
 
-        JTextArea textArea = new JTextArea(10, 50);
-        textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-        textArea.setEditable(false);
-        textArea.setBorder(BorderFactory.createTitledBorder("Resultado"));
-        JScrollPane scrollPane = new JScrollPane(textArea);
+        textAreaBuscar = new JTextArea(10, 50);
+        textAreaBuscar.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+        textAreaBuscar.setEditable(false);
+        textAreaBuscar.setBorder(BorderFactory.createTitledBorder("Resultado"));
+        JScrollPane scrollPane = new JScrollPane(textAreaBuscar);
 
         panel.add(controlPanel, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
-        panel.putClientProperty("textArea", textArea);
 
         return panel;
     }
@@ -203,15 +204,14 @@ public class ProductoViewGUI extends GUIViewBase {
         btnEliminar.addActionListener(e -> eliminarProducto());
         controlPanel.add(btnEliminar);
 
-        JTextArea textArea = new JTextArea(10, 50);
-        textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-        textArea.setEditable(false);
-        textArea.setBorder(BorderFactory.createTitledBorder("Información del Producto"));
-        JScrollPane scrollPane = new JScrollPane(textArea);
+        textAreaEliminar = new JTextArea(10, 50);
+        textAreaEliminar.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+        textAreaEliminar.setEditable(false);
+        textAreaEliminar.setBorder(BorderFactory.createTitledBorder("Información del Producto"));
+        JScrollPane scrollPane = new JScrollPane(textAreaEliminar);
 
         panel.add(controlPanel, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
-        panel.putClientProperty("textArea", textArea);
 
         return panel;
     }
@@ -250,7 +250,11 @@ public class ProductoViewGUI extends GUIViewBase {
 
             if (respuesta.equals("")) {
                 showErrorMessage("Error al crear producto.");
+            } else if (respuesta.startsWith("ERROR:")) {
+                // Si hay un error (por ejemplo, de permisos), mostrar solo el mensaje de error
+                showErrorMessage(respuesta);
             } else {
+                // Solo mostrar mensaje de éxito si no hay errores
                 showSuccessMessage(respuesta + "\nProducto registrado correctamente.");
                 limpiarFormulario();
             }
@@ -266,16 +270,17 @@ public class ProductoViewGUI extends GUIViewBase {
             int id = readIntFromField(fieldIdBuscar);
             String respuesta = productoCtrl.buscarProductoPorId(id);
 
-            JPanel buscarPanel = (JPanel) ((JTabbedPane) getContentPane().getComponent(0)).getComponent(2);
-            JTextArea textArea = (JTextArea) ((JScrollPane) buscarPanel.getComponent(1)).getViewport().getView();
-
-            if (respuesta.equals("")) {
-                textArea.setText("No se encontró ningún producto con esa ID.");
+            if (respuesta == null || respuesta.equals("")) {
+                textAreaBuscar.setText("No se encontró ningún producto con esa ID.");
             } else {
-                textArea.setText(respuesta);
+                textAreaBuscar.setText(respuesta);
             }
         } catch (NumberFormatException e) {
             showErrorMessage("Por favor ingrese un ID válido.");
+            textAreaBuscar.setText("Error: ID inválido.");
+        } catch (Exception e) {
+            showErrorMessage("Error al buscar producto: " + e.getMessage());
+            textAreaBuscar.setText("Error: " + e.getMessage());
         }
     }
 
@@ -284,23 +289,25 @@ public class ProductoViewGUI extends GUIViewBase {
             int id = readIntFromField(fieldIdEliminar);
             String producto = productoCtrl.buscarProductoPorId(id);
 
-            JPanel eliminarPanel = (JPanel) ((JTabbedPane) getContentPane().getComponent(0)).getComponent(3);
-            JTextArea textArea = (JTextArea) ((JScrollPane) eliminarPanel.getComponent(1)).getViewport().getView();
-
-            if (producto.equals("")) {
-                textArea.setText("No se encontró ningún producto con esa ID.");
+            if (producto == null || producto.equals("")) {
+                textAreaEliminar.setText("No se encontró ningún producto con esa ID.");
+                showErrorMessage("No se encontró ningún producto con esa ID.");
             } else {
-                textArea.setText(producto);
+                textAreaEliminar.setText(producto);
                 int confirm = showConfirmDialog("¿Está seguro que desea eliminar este producto?", "Confirmar eliminación");
                 if (confirm == JOptionPane.YES_OPTION) {
                     productoCtrl.eliminarProducto(id);
                     showSuccessMessage("Producto eliminado correctamente.");
-                    textArea.setText("");
+                    textAreaEliminar.setText("");
                     fieldIdEliminar.setText("");
                 }
             }
         } catch (NumberFormatException e) {
             showErrorMessage("Por favor ingrese un ID válido.");
+            textAreaEliminar.setText("Error: ID inválido.");
+        } catch (Exception e) {
+            showErrorMessage("Error al eliminar producto: " + e.getMessage());
+            textAreaEliminar.setText("Error: " + e.getMessage());
         }
     }
 

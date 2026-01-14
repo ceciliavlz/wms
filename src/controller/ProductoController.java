@@ -7,16 +7,25 @@ import java.util.Map;
 import model.Producto;
 import model.StockUbicacion;
 import model.UnidadMedida;
+import services.PermissionService;
 import services.StockService;
 
 public class ProductoController {
     private final StockService stockService;
+    private PermissionService permissionService;
 
     public ProductoController(StockService stockService) {
         this.stockService = stockService;
     }
 
+    public void setPermissionService(PermissionService permissionService) {
+        this.permissionService = permissionService;
+    }
+
     public String agregarProducto(String descripcion, String unidadMedida, double peso, double capacidad, int stockMin, String grupo) {
+        if (permissionService != null && !permissionService.canWrite()) {
+            return "ERROR: No tiene permisos para crear productos.";
+        }
         UnidadMedida unidadMed;
 
         try { 
@@ -52,6 +61,10 @@ public class ProductoController {
     }
 
     public void eliminarProducto(int id) {
+        if (permissionService != null && !permissionService.canDelete()) {
+            System.out.println("ERROR: No tiene permisos para eliminar productos.");
+            return;
+        }
         stockService.eliminarProductoPorId(id);
     }
 

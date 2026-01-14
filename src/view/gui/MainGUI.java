@@ -5,10 +5,13 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import model.User;
+import services.AuthService;
 import services.StockService;
 import services.TransformacionService;
 import services.MovimientoService;
 import services.NaveService;
+import services.PermissionService;
 import services.RackService;
 import controller.ConsultasController;
 import controller.HistorialController;
@@ -24,6 +27,9 @@ public class MainGUI extends JFrame {
     private NaveService naveService;
     private MovimientoService movService;
     private TransformacionService transfService;
+    private AuthService authService;
+    private PermissionService permissionService;
+    private User usuarioActual;
     
     private HistorialController historialCtrl;
     private ProductoController productoCtrl;
@@ -33,6 +39,21 @@ public class MainGUI extends JFrame {
     private TransformacionController transfController;
 
     public MainGUI() {
+        // Primero autenticar
+        authService = new AuthService();
+        LoginGUI loginGUI = new LoginGUI(null, authService);
+        usuarioActual = loginGUI.mostrarLogin();
+        
+        if (usuarioActual == null) {
+            JOptionPane.showMessageDialog(null,
+                "No se pudo autenticar. Saliendo...",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+            return;
+        }
+
+        permissionService = new PermissionService(usuarioActual);
         initializeServices();
         initializeControllers();
         setupUI();
@@ -44,6 +65,10 @@ public class MainGUI extends JFrame {
         naveService = new NaveService(rackService);
         movService = new MovimientoService(stockService);
         transfService = new TransformacionService(stockService);
+        
+        // Configurar usuario actual en servicios para auditoría
+        movService.setUsuarioActual(usuarioActual.getUsername());
+        transfService.setUsuarioActual(usuarioActual.getUsername());
     }
 
     private void initializeControllers() {
@@ -53,10 +78,16 @@ public class MainGUI extends JFrame {
         naveCtrl = new NaveController(naveService, stockService);
         consultasCtrl = new ConsultasController(stockService);
         transfController = new TransformacionController(transfService, stockService);
+        
+        // Configurar permisos en controladores
+        productoCtrl.setPermissionService(permissionService);
+        movimientoCtrl.setPermissionService(permissionService);
+        naveCtrl.setPermissionService(permissionService);
+        transfController.setPermissionService(permissionService);
     }
 
     private void setupUI() {
-        setTitle("Sistema de Gestión de Almacenes (WMS)");
+        setTitle("Sistema de Gestión de Almacenes (WMS) - Usuario: " + usuarioActual.getUsername() + " (" + usuarioActual.getRole() + ")");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setSize(800, 600);
         setLocationRelativeTo(null);

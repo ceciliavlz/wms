@@ -29,7 +29,8 @@ public class OrdenTransfDAO {
                     String.valueOf(o.getIdProductoTransformado()),
                     o.getUbicacionSalida(),
                     String.valueOf(o.getCantidadSalida()),
-                    o.getFecha().toString()
+                    o.getFecha().toString(),
+                    o.getUsuarioResponsable() == null ? "" : o.getUsuarioResponsable()
                 ));
             }
         }
@@ -52,11 +53,15 @@ public class OrdenTransfDAO {
                 String ubicacionSalida = parts[5]; 
                 int cantidadSalida = Integer.parseInt(parts[6]);
                 LocalDate fecha = LocalDate.parse(parts[7]);
+                String usuarioResponsable = parts.length >= 9 && !parts[8].isEmpty() ? parts[8] : null;
 
                 OrdenTransformacion orden = new OrdenTransformacion(idProdEntrada, ubicacionProdEntrada, cantidadEntrada, 
                     idProductoTransformado,ubicacionSalida,fecha);
                 orden.setIdOrdenTransf(idOrdenTransf);
                 orden.setCantidadSalida(cantidadSalida);
+                if (usuarioResponsable != null) {
+                    orden.setUsuarioResponsable(usuarioResponsable);
+                }
 
                 lista.add(orden);
             }
