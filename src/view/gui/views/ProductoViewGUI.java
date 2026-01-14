@@ -321,7 +321,7 @@ public class ProductoViewGUI extends GUIViewBase {
             List<String> productoEnLista = new ArrayList<>();
             productoEnLista.add(producto);
 
-            if (respuesta == null || producto.equals("")) {
+            if (producto == null || producto.equals("")) {
                 showErrorMessage("No se encontró ningún producto con esa ID.");
             } else {
                 generarLineaProducto(productoEnLista, modelEliminarProducto);
