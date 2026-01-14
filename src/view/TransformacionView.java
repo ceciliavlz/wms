@@ -96,12 +96,13 @@ public class TransformacionView extends View {
         mostrarMensaje("-------------------------------------------------------------");
 
         for (OrdenTransformacion o : historial) {
+            String usuario = o.getUsuarioResponsable() != null ? " | Usuario: " + o.getUsuarioResponsable() : "";
             mostrarMensaje(
                 "Orden " + o.getIdOrdenTransf() +
                 " | " + o.getFecha() +
                 " | P" + o.getIdProductoEntrada() + " → P" + o.getIdProductoTransformado() +
                 " | -" + o.getCantidadEntrada() + " → +" + o.getCantidadSalida() +
-                " | " + o.getUbicacionProdEntrada() + " → " + o.getUbicacionSalida()
+                " | " + o.getUbicacionProdEntrada() + " → " + o.getUbicacionSalida() + usuario
             );
         }
     }

@@ -12,6 +12,8 @@ public class OrdenTransformacion {
     private String ubicacionSalida;
     private int cantidadSalida;
     private LocalDate fecha;
+    //auditoría
+    private String usuarioResponsable;
 
     public OrdenTransformacion(int idProductoEntrada, String ubicacionProdEntrada, int cantidadEntrada, int idProductoTransformado,
             String ubicacionSalida, LocalDate fecha) {
@@ -43,6 +45,10 @@ public class OrdenTransformacion {
     public void setIdOrdenTransf(int idOrdenTransf) {this.idOrdenTransf = idOrdenTransf; }
     public void setIdProductoTransformado(int idProductoTransformado) {this.idProductoTransformado = idProductoTransformado;}
     public void setCantidadSalida(int cantidadSalida) {this.cantidadSalida = cantidadSalida;}
+    public String getUsuarioResponsable() { return usuarioResponsable; }
+    public void setUsuarioResponsable(String usuarioResponsable) {
+        this.usuarioResponsable = usuarioResponsable;
+    }
 
     @Override
     public String toString() {

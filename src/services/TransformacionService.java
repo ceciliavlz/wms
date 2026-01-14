@@ -11,10 +11,15 @@ import model.Producto;
 public class TransformacionService {
     private StockService stockService;
     private List<OrdenTransformacion> historialTransformacion = new ArrayList<>();
+    private String usuarioActual = null;
     
     public TransformacionService(StockService stockService) {
         this.stockService = stockService;
         cargarHistorial();
+    }
+
+    public void setUsuarioActual(String username) {
+        this.usuarioActual = username;
     }
 
     public String procesarOrdenTransformacion(OrdenTransformacion orden, Producto datosProdTransformado) {
@@ -40,6 +45,10 @@ public class TransformacionService {
             orden.getUbicacionSalida(), unidadesTransformadas); //agrego stock transformado a ubicacion
 
         if (quitarStockViejo.startsWith("OK:") && agregarStockNuevo.startsWith("OK:")) {
+            // Asignar usuario responsable para auditoría
+            if (usuarioActual != null) {
+                orden.setUsuarioResponsable(usuarioActual);
+            }
             historialTransformacion.add(orden);
             guardarHistorial();
             return "OK. Transformación realizada con éxito.";
@@ -52,7 +61,7 @@ public class TransformacionService {
         if (historialTransformacion.isEmpty()){
             return 1;
         } else {
-            return historialTransformacion.getLast().getIdOrdenTransf() + 1;
+            return historialTransformacion.get(historialTransformacion.size() - 1).getIdOrdenTransf() + 1;
         }     
     }
 

@@ -23,7 +23,8 @@ public class OrdenMovDAO {
                     o.getFecha().toString(),
                     o.getUbicacion() == null ? "" : o.getUbicacion(), //si es null escribe "", sino escribe la ubicacion
                     o.getUbicacionOrigen() == null ? "" : o.getUbicacionOrigen(),
-                    o.getUbicacionDestino() == null ? "" : o.getUbicacionDestino()
+                    o.getUbicacionDestino() == null ? "" : o.getUbicacionDestino(),
+                    o.getUsuarioResponsable() == null ? "" : o.getUsuarioResponsable()
                 ));
             }
         }
@@ -44,14 +45,21 @@ public class OrdenMovDAO {
                     int cant = Integer.parseInt(parts[2]);
                     int idProducto = Integer.parseInt(parts[3]); 
                     LocalDate fecha = LocalDate.parse(parts[4]);
+                    String usuarioResponsable = parts.length >= 9 && !parts[8].isEmpty() ? parts[8] : null;
+                    
+                    OrdenMovimiento orden;
                     if (tipo == TipoMovimiento.INTERNO){ 
                         String ubiOrigen = parts[6];
                         String ubiDestino = parts[7];            
-                        lista.add(new OrdenMovimiento( tipo, idOrden, cant, idProducto, fecha, ubiOrigen, ubiDestino));
+                        orden = new OrdenMovimiento( tipo, idOrden, cant, idProducto, fecha, ubiOrigen, ubiDestino);
                     } else{
                         String ubi = parts[5];
-                        lista.add(new OrdenMovimiento( tipo, idOrden, cant, idProducto, fecha, ubi));
+                        orden = new OrdenMovimiento( tipo, idOrden, cant, idProducto, fecha, ubi);
                     }
+                    if (usuarioResponsable != null) {
+                        orden.setUsuarioResponsable(usuarioResponsable);
+                    }
+                    lista.add(orden);
                 }
             }
         }

@@ -331,11 +331,15 @@ public class OrdenesMovViewGUI extends GUIViewBase {
             int cantidad = readIntFromField(fieldCantidad);
             
             String respuesta = movimientoCtrl.generarOrdenIngreso(id, ubicacion, cantidad);
-            showSuccessMessage(respuesta);
             
-            // Limpiar campos
-            fieldUbicacion.setText("");
-            fieldCantidad.setText("");
+            if (respuesta.startsWith("ERROR:")) {
+                showErrorMessage(respuesta);
+            } else {
+                showSuccessMessage(respuesta);
+                // Limpiar campos solo si fue exitoso
+                fieldUbicacion.setText("");
+                fieldCantidad.setText("");
+            }
         } catch (Exception e) {
             showErrorMessage("Error: " + e.getMessage());
         }
@@ -343,12 +347,20 @@ public class OrdenesMovViewGUI extends GUIViewBase {
 
     private void generarEgreso(int id, String ubicacion, int cantidad) {
         String respuesta = movimientoCtrl.generarOrdenEgreso(id, ubicacion, cantidad);
-        showSuccessMessage(respuesta);
+        if (respuesta.startsWith("ERROR:")) {
+            showErrorMessage(respuesta);
+        } else {
+            showSuccessMessage(respuesta);
+        }
     }
 
     private void generarTraslado(int id, String origen, String destino, int cantidad) {
         String respuesta = movimientoCtrl.generarOrdenMovInterno(id, origen, destino, cantidad);
-        showSuccessMessage(respuesta);
+        if (respuesta.startsWith("ERROR:")) {
+            showErrorMessage(respuesta);
+        } else {
+            showSuccessMessage(respuesta);
+        }
     }
 }
 

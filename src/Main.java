@@ -1,9 +1,12 @@
 import java.util.Scanner;
 
+import model.User;
+import services.AuthService;
 import services.StockService;
 import services.TransformacionService;
 import view.ConsultasView;
 import view.HistorialView;
+import view.LoginView;
 import view.NaveView;
 import view.OrdenesMovView;
 import view.ProductoView;
@@ -12,6 +15,7 @@ import view.View;
 import view.gui.MainGUI;
 import services.MovimientoService;
 import services.NaveService;
+import services.PermissionService;
 import services.RackService;
 import controller.ConsultasController;
 import controller.HistorialController;
@@ -39,12 +43,30 @@ public class Main {
     private static void iniciarModoConsola() {
         Scanner scanner = new Scanner(System.in);
 
+        // Autenticación
+        AuthService authService = new AuthService();
+        LoginView loginView = new LoginView(authService, scanner);
+        User usuario = loginView.mostrarLogin();
+        
+        if (usuario == null) {
+            System.out.println("No se pudo autenticar. Saliendo...");
+            scanner.close();
+            return;
+        }
+
+        // Servicios de permisos
+        PermissionService permissionService = new PermissionService(usuario);
+
         //SOLO SE INSTANCIAN UNA VEZ
         StockService stockService = new StockService();
         RackService rackService = new RackService(stockService);
         NaveService naveService = new NaveService(rackService);
         MovimientoService movService = new MovimientoService(stockService);
         TransformacionService transfService = new TransformacionService(stockService);
+
+        // Configurar usuario actual en servicios para auditoría
+        movService.setUsuarioActual(usuario.getUsername());
+        transfService.setUsuarioActual(usuario.getUsername());
 
         //controllers
         HistorialController historialCtrl = new HistorialController(movService,transfService);
@@ -53,6 +75,12 @@ public class Main {
         NaveController naveCtrl = new NaveController(naveService, stockService);
         ConsultasController consultasCtrl = new ConsultasController(stockService);
         TransformacionController transfController = new TransformacionController(transfService,stockService);
+
+        // Configurar permisos en controladores
+        productoCtrl.setPermissionService(permissionService);
+        movimientoCtrl.setPermissionService(permissionService);
+        naveCtrl.setPermissionService(permissionService);
+        transfController.setPermissionService(permissionService);
 
         //views
         HistorialView historialView = new HistorialView(historialCtrl, scanner);
@@ -67,6 +95,8 @@ public class Main {
 
         while (!salir) {
             System.out.println("\n==== Menú Principal =======================");
+            System.out.println("Usuario: " + usuario.getUsername() + " (" + usuario.getRole() + ")");
+            System.out.println("==============================================");
             System.out.println("1. NAVES");
             System.out.println("2. PRODUCTOS");
             System.out.println("3. ORDENES DE MOVIMIENTO");

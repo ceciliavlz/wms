@@ -26,6 +26,8 @@ public class ProductoViewGUI extends GUIViewBase {
     private JComboBox<String> comboGrupo;
     private JTextField fieldIdBuscar;
     private JTextField fieldIdEliminar;
+    private JTextArea textAreaBuscar;
+    private JTextArea textAreaEliminar;
 
     public ProductoViewGUI(ProductoController productoCtrl) {
         super("Gestión de Productos");
@@ -274,7 +276,11 @@ public class ProductoViewGUI extends GUIViewBase {
 
             if (respuesta.equals("")) {
                 showErrorMessage("Error al crear producto.");
+            } else if (respuesta.startsWith("ERROR:")) {
+                // Si hay un error (por ejemplo, de permisos), mostrar solo el mensaje de error
+                showErrorMessage(respuesta);
             } else {
+                // Solo mostrar mensaje de éxito si no hay errores
                 showSuccessMessage(respuesta + "\nProducto registrado correctamente.");
                 limpiarFormulario();
             }
@@ -293,13 +299,17 @@ public class ProductoViewGUI extends GUIViewBase {
             List<String> respuestaEnLista = new ArrayList<>();
             respuestaEnLista.add(respuesta);
 
-            if (respuesta.equals("")) {
+            if (respuesta == null || respuesta.equals("")) {
                 showErrorMessage("No se encontró ningún producto con esa ID.");
             } else {
                 generarLineaProducto(respuestaEnLista, modelBuscarProducto);
             }
         } catch (NumberFormatException e) {
             showErrorMessage("Por favor ingrese un ID válido.");
+            textAreaBuscar.setText("Error: ID inválido.");
+        } catch (Exception e) {
+            showErrorMessage("Error al buscar producto: " + e.getMessage());
+            textAreaBuscar.setText("Error: " + e.getMessage());
         }
     }
 
@@ -311,7 +321,7 @@ public class ProductoViewGUI extends GUIViewBase {
             List<String> productoEnLista = new ArrayList<>();
             productoEnLista.add(producto);
 
-            if (producto.equals("")) {
+            if (respuesta == null || producto.equals("")) {
                 showErrorMessage("No se encontró ningún producto con esa ID.");
             } else {
                 generarLineaProducto(productoEnLista, modelEliminarProducto);
@@ -325,6 +335,10 @@ public class ProductoViewGUI extends GUIViewBase {
             }
         } catch (NumberFormatException e) {
             showErrorMessage("Por favor ingrese un ID válido.");
+            textAreaEliminar.setText("Error: ID inválido.");
+        } catch (Exception e) {
+            showErrorMessage("Error al eliminar producto: " + e.getMessage());
+            textAreaEliminar.setText("Error: " + e.getMessage());
         }
     }
 
