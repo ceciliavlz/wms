@@ -6,7 +6,7 @@
 ## 🚀 Cómo Levantar el Proyecto
 
 ### Requisitos Previos
-- Java JDK 8 o superior instalado
+- Java JDK 21 o superior instalado
 - Verificar instalación: `java -version` y `javac -version`
 
 ### ⚡ Ejecución Rápida (Recomendada)
