@@ -1,13 +1,12 @@
 package view.gui.views;
 
-import view.gui.GUIViewBase;
 import controller.ConsultasController;
 import controller.ProductoController;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import view.gui.GUIViewBase;
 
 public class ConsultasViewGUI extends GUIViewBase {
     private final ConsultasController consultasCtrl;
@@ -199,7 +198,7 @@ public class ConsultasViewGUI extends GUIViewBase {
         
         int stock = consultasCtrl.stockDeUnProducto(idProd);
         
-        JTabbedPane tabbedPane = (JTabbedPane) getContentPane().getComponent(0);
+        JTabbedPane tabbedPane = (JTabbedPane) ((JPanel) getContentPane().getComponent(0)).getComponent(1);
         JPanel panel = (JPanel) tabbedPane.getComponent(0);
         JTextArea textArea = (JTextArea) ((JScrollPane) panel.getComponent(1)).getViewport().getView();
         
@@ -214,7 +213,7 @@ public class ConsultasViewGUI extends GUIViewBase {
     private void consultarStockUbicacion(String ubicacion) {
         List<String> respuesta = consultasCtrl.stockDeUnaUbicacion(ubicacion);
         
-        JTabbedPane tabbedPane = (JTabbedPane) getContentPane().getComponent(0);
+        JTabbedPane tabbedPane = (JTabbedPane) ((JPanel) getContentPane().getComponent(0)).getComponent(1);
         JPanel panel = (JPanel) tabbedPane.getComponent(1);
         DefaultTableModel model = (DefaultTableModel) panel.getClientProperty("tableModel");
         
@@ -262,7 +261,7 @@ public class ConsultasViewGUI extends GUIViewBase {
     private void consultarStockAgrupadoUbicacion() {
         List<String> respuesta = consultasCtrl.agrupadoPorUbicacion();
         
-        JTabbedPane tabbedPane = (JTabbedPane) getContentPane().getComponent(0);
+        JTabbedPane tabbedPane = (JTabbedPane) ((JPanel) getContentPane().getComponent(0)).getComponent(1);
         JPanel panel = (JPanel) tabbedPane.getComponent(3);
         DefaultTableModel model = (DefaultTableModel) panel.getClientProperty("tableModel");
         

@@ -1,17 +1,21 @@
 package view.gui.views;
 
-import view.gui.GUIViewBase;
 import controller.ProductoController;
-
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.util.List;
+import view.gui.GUIViewBase;
 
 public class ProductoViewGUI extends GUIViewBase {
     private final ProductoController productoCtrl;
     private JTable tableProductos;
     private DefaultTableModel modelProductos;
+    private JTable tableBuscarProducto;
+    private DefaultTableModel modelBuscarProducto;
+    private JTable tableEliminarProducto;
+    private DefaultTableModel modelEliminarProducto;
     
     // Campos del formulario
     private JTextField fieldDescripcion;
@@ -73,7 +77,7 @@ public class ProductoViewGUI extends GUIViewBase {
         JButton btnListar = createButton("Listar Todos los Productos", COLOR_PRIMARY);
         btnListar.addActionListener(e -> listarProductos());
 
-        String[] columnNames = {"ID", "Descripción", "Unidad", "Peso (kg)", "Capacidad", "Stock Mín", "Grupo", "Código"};
+        String[] columnNames = {"ID", "Descripción", "Unidad", "Peso (kg)", "Capacidad", "Grupo", "Stock Mín", "Código"};
         modelProductos = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -129,7 +133,7 @@ public class ProductoViewGUI extends GUIViewBase {
         gbc.gridx = 0; gbc.gridy = 3;
         formPanel.add(createLabel("Unidad de medida:"), gbc);
         gbc.gridx = 1;
-        comboUnidadMedida = new JComboBox<>(new String[]{"LITROS", "KILOS", "UNIDAD", "GRAMOS", "MILILITROS"});
+        comboUnidadMedida = new JComboBox<>(new String[]{"LITROS", "KILOS", "UNIDAD", "GRAMOS"});
         comboUnidadMedida.setFont(FONT_NORMAL);
         formPanel.add(comboUnidadMedida, gbc);
 
@@ -178,11 +182,19 @@ public class ProductoViewGUI extends GUIViewBase {
         btnBuscar.addActionListener(e -> buscarProducto());
         controlPanel.add(btnBuscar);
 
-        textAreaBuscar = new JTextArea(10, 50);
-        textAreaBuscar.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-        textAreaBuscar.setEditable(false);
-        textAreaBuscar.setBorder(BorderFactory.createTitledBorder("Resultado"));
-        JScrollPane scrollPane = new JScrollPane(textAreaBuscar);
+        String[] columnNames = {"ID", "Descripción", "Unidad", "Peso (kg)", "Capacidad", "Grupo", "Stock Mín", "Código"};
+        modelBuscarProducto = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tableBuscarProducto = new JTable(modelBuscarProducto);
+        tableBuscarProducto.setFont(FONT_NORMAL);
+        tableBuscarProducto.setRowHeight(25);
+        tableBuscarProducto.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        JScrollPane scrollPane = new JScrollPane(tableBuscarProducto);
 
         panel.add(controlPanel, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
@@ -204,16 +216,40 @@ public class ProductoViewGUI extends GUIViewBase {
         btnEliminar.addActionListener(e -> eliminarProducto());
         controlPanel.add(btnEliminar);
 
-        textAreaEliminar = new JTextArea(10, 50);
-        textAreaEliminar.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-        textAreaEliminar.setEditable(false);
-        textAreaEliminar.setBorder(BorderFactory.createTitledBorder("Información del Producto"));
-        JScrollPane scrollPane = new JScrollPane(textAreaEliminar);
+        String[] columnNames = {"ID", "Descripción", "Unidad", "Peso (kg)", "Capacidad", "Grupo", "Stock Mín", "Código"};
+        modelEliminarProducto = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tableEliminarProducto = new JTable(modelEliminarProducto);
+        tableEliminarProducto.setFont(FONT_NORMAL);
+        tableEliminarProducto.setRowHeight(25);
+        tableEliminarProducto.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        JScrollPane scrollPane = new JScrollPane(tableEliminarProducto);
 
         panel.add(controlPanel, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
 
         return panel;
+    }
+
+    private void generarLineaProducto(List<String> productos, DefaultTableModel modelProductos) {
+        // Parsear cada línea del formato de texto
+        for (String producto : productos) {
+            String[] parts = producto.split("\\|");
+            if (parts.length >= 7) {
+                String[] row = new String[8];
+                for (int i = 0; i < parts.length && i < 8; i++) {
+                    row[i] = parts[i].trim();
+                }
+                row[7] = row[0];
+                row[0] = row[0].substring(4);
+                modelProductos.addRow(row);
+            }
+        }
     }
 
     private void listarProductos() {
@@ -223,17 +259,7 @@ public class ProductoViewGUI extends GUIViewBase {
         if (productos.isEmpty()) {
             showWarningMessage("No se encontraron productos.");
         } else {
-            // Parsear cada línea del formato de texto
-            for (String producto : productos) {
-                String[] parts = producto.split("\\|");
-                if (parts.length >= 7) {
-                    Object[] row = new Object[8];
-                    for (int i = 0; i < parts.length && i < 8; i++) {
-                        row[i] = parts[i].trim();
-                    }
-                    modelProductos.addRow(row);
-                }
-            }
+            generarLineaProducto(productos, modelProductos);
         }
     }
 
@@ -266,14 +292,17 @@ public class ProductoViewGUI extends GUIViewBase {
     }
 
     private void buscarProducto() {
+        modelBuscarProducto.setRowCount(0);
         try {
             int id = readIntFromField(fieldIdBuscar);
             String respuesta = productoCtrl.buscarProductoPorId(id);
+            List<String> respuestaEnLista = new ArrayList<>();
+            respuestaEnLista.add(respuesta);
 
             if (respuesta == null || respuesta.equals("")) {
-                textAreaBuscar.setText("No se encontró ningún producto con esa ID.");
+                showErrorMessage("No se encontró ningún producto con esa ID.");
             } else {
-                textAreaBuscar.setText(respuesta);
+                generarLineaProducto(respuestaEnLista, modelBuscarProducto);
             }
         } catch (NumberFormatException e) {
             showErrorMessage("Por favor ingrese un ID válido.");
@@ -285,20 +314,22 @@ public class ProductoViewGUI extends GUIViewBase {
     }
 
     private void eliminarProducto() {
+        modelEliminarProducto.setRowCount(0);
         try {
             int id = readIntFromField(fieldIdEliminar);
             String producto = productoCtrl.buscarProductoPorId(id);
+            List<String> productoEnLista = new ArrayList<>();
+            productoEnLista.add(producto);
 
             if (producto == null || producto.equals("")) {
-                textAreaEliminar.setText("No se encontró ningún producto con esa ID.");
                 showErrorMessage("No se encontró ningún producto con esa ID.");
             } else {
-                textAreaEliminar.setText(producto);
+                generarLineaProducto(productoEnLista, modelEliminarProducto);
                 int confirm = showConfirmDialog("¿Está seguro que desea eliminar este producto?", "Confirmar eliminación");
                 if (confirm == JOptionPane.YES_OPTION) {
                     productoCtrl.eliminarProducto(id);
                     showSuccessMessage("Producto eliminado correctamente.");
-                    textAreaEliminar.setText("");
+                    modelEliminarProducto.setRowCount(0);
                     fieldIdEliminar.setText("");
                 }
             }

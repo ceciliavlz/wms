@@ -57,9 +57,9 @@ public class Producto {
 
     @Override
     public String toString() {
-        return codigo+" | Desc: "+ descripcion+ " | U. medida: "+ unidadMedida+
-        " | Peso unit: "+ pesoUnitario+" | Contenedor de "+ capacidad+ " "+ unidadMedida.name().toLowerCase()+
-        " | Grupo: "+ grupo +" | Stock minimo: "+ stockMinimo;
+        return codigo+" | "+ descripcion+ " | "+ unidadMedida+
+        " | "+ pesoUnitario+" | "+ capacidad+ " "+ unidadMedida.name().toLowerCase()+
+        " | "+ grupo +" | "+ stockMinimo;
     }
 
     public void setCodigo(String codigo) {

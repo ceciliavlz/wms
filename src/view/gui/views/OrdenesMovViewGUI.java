@@ -1,12 +1,11 @@
 package view.gui.views;
 
-import view.gui.GUIViewBase;
 import controller.MovimientoController;
 import controller.ProductoController;
-
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import javax.swing.*;
+import view.gui.GUIViewBase;
 
 public class OrdenesMovViewGUI extends GUIViewBase {
     private final MovimientoController movimientoCtrl;
@@ -309,10 +308,11 @@ public class OrdenesMovViewGUI extends GUIViewBase {
         }
         
         // Actualizar el textArea correspondiente según el tab
-        JTabbedPane tabbedPane = (JTabbedPane) getContentPane().getComponent(0);
+        
+        JTabbedPane tabbedPane = (JTabbedPane) ((JPanel) getContentPane().getComponent(0)).getComponent(1);
         int tabIndex = tipo.equals("egreso") ? 1 : 2;
         JPanel panel = (JPanel) tabbedPane.getComponent(tabIndex);
-        JScrollPane scrollPane = (JScrollPane) ((JPanel) panel.getComponent(0)).getComponent(1);
+        JScrollPane scrollPane = (JScrollPane) ((JPanel) panel.getComponent(0)).getComponent(3);
         JTextArea textArea = (JTextArea) scrollPane.getViewport().getView();
         textArea.setText(sb.toString());
     }
