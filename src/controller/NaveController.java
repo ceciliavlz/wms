@@ -42,6 +42,15 @@ public class NaveController {
         }
         return naves;
     }
+    
+    public List<Integer> getIdsNaves() {
+        List<Integer> idsNaves = new ArrayList<>();
+
+        for (Nave nave : naveService.getTodasLasNaves()) {
+            idsNaves.add(nave.getIdNave());
+        }
+        return idsNaves;
+    }
 
     public int crearRack(int idNave){
         if (permissionService != null && !permissionService.canWrite()) {

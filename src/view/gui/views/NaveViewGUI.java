@@ -210,18 +210,14 @@ public class NaveViewGUI extends GUIViewBase {
 
     // Lista las naves
     private void listarNaves() {
-        List<String> naves = naveCtrl.listarNaves();
+        List<Integer> naveIDs = naveCtrl.getIdsNaves();
         modelNaves.setRowCount(0);
         
-        if (naves.isEmpty()) {
+        if (naveIDs.isEmpty()) {
             showWarningMessage("No hay naves registradas.");
         } else {
-            for (String nave : naves) {
-                // Extraer ID de la cadena (formato: "Nave ID: X")
-                String id = nave.replaceAll("[^0-9]", "");
-                if (!id.isEmpty()) {
-                    modelNaves.addRow(new Object[]{id});
-                }
+            for (int naveID : naveIDs) {
+                    modelNaves.addRow(new Object[]{naveID});              
             }
         }
     }
