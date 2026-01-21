@@ -219,8 +219,9 @@ public class NaveViewGUI extends GUIViewBase {
             for (String nave : naves) {
                 // Extraer ID de la cadena (formato: "Nave ID: X")
                 String id = nave.replaceAll("[^0-9]", "");
+                char numeroId = id.charAt(0);
                 if (!id.isEmpty()) {
-                    modelNaves.addRow(new Object[]{id});
+                    modelNaves.addRow(new Object[]{numeroId});
                 }
             }
         }
